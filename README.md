@@ -36,7 +36,7 @@ The app follows **Clean Architecture** and **MVVM** to ensure modularity and mai
 ### Steps
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-repo/expenses-tracker.git
+   git clone https://github.com/jayce-vu/Expense-Tracker.git
    cd expenses-tracker
    ```
 2. Open the project in **Android Studio**.

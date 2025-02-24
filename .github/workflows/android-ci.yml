@@ -1,0 +1,35 @@
+name: Android CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint-test-build:
+    name: Lint, Test, and Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🔧 Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: 📦 Set up Gradle Cache
+        uses: gradle/gradle-build-action@v2
+
+      - name: 🎨 Run Ktlint (Lint Check)
+        run: ./gradlew lint
+
+      - name: 🧪 Run Unit Tests
+        run: ./gradlew test
+
+      - name: 🏗️ Build the App
+        run: ./gradlew assembleDebug

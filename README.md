@@ -1,53 +1,57 @@
-# Expense Tracker
+# Expenses Tracker
 
-Expense Tracker is a personal finance management application that helps users track their expenses efficiently.
-The backend can be implemented using Google Script + Excel or Firebase.
+## 📌 Overview
+Expenses Tracker is a mobile application built using **Kotlin & Jetpack Compose**, designed to help users manage their finances by tracking income and expenses efficiently. The app provides a user-friendly interface with features like statistics, transaction history, and multi-language support.
 
-## Key Features
+## 🎯 Features
+- **Splash Screen**: Displays logo and app name.
+- **Onboarding Screen**: Introduction and 'Get Started' option.
+- **Homepage**: Shows current time, user name, total balance, income, expenses, and transaction history.
+- **Statistics**: Displays income/expense analytics with charts (daily, weekly, monthly, yearly), top spending, and sorting options.
+- **Add Expense**: Users can add transactions with details like name, amount, date, and invoice.
+- **Transaction Details**: Provides detailed information on expenses.
+- **Profile Management**: Allows users to update profile details like name, email, and profile picture.
+- **Light/Dark Mode** and **Multi-Language Support**.
 
-✅ Add/Edit/Delete transactions  
-✅ Categorize expenses (Food, Shopping, Transportation, etc.)  
-✅ Display financial charts  
-✅ Store data using Room Database  
-✅ Sync data to the server using Retrofit  
+## 🏗 Architecture & Tech Stack
+The app follows **Clean Architecture** and **MVVM** to ensure modularity and maintainability.
 
-## Technologies Used
+### 📌 Tech Stack:
+- **UI**: Jetpack Compose
+- **State Management**:
+  - Local: `remember + MutableState`
+  - Global: `ViewModel + StateFlow/LiveData`
+  - State Hoisting & State Saving
+- **Navigation**: Jetpack Navigation
+- **Dependency Injection**: Hilt
+- **Local Storage**: Room Database (SQLite)
+- **Network Requests**: Retrofit
 
-The application follows Clean Architecture principles along with Unidirectional Data Flow (UDF) pattern using ViewModel + StateFlow.
+## 🛠 Setup & Installation
+### Prerequisites
+- Android Studio Flamingo or later
+- JDK 17+
+- Gradle 8+
 
-### Architectural Layers
+### Steps
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-repo/expenses-tracker.git
+   cd expenses-tracker
+   ```
+2. Open the project in **Android Studio**.
+3. Sync Gradle and install dependencies.
+4. Run the app on an emulator or physical device.
 
-1. **Presentation Layer**
-   - Composed of UI components (Jetpack Compose)
-   - Uses ViewModel to manage UI-related data
-   - Implements StateFlow for state management
+## ✅ Testing & CI/CD
+- **Unit Testing**: Implemented using JUnit + Mockk.
+- **Code Quality**: Enforced with `ktlint`.
+- **GitHub Actions**: Automated build and test execution.
 
-2. **Domain Layer**
-   - Contains business logic (Use Cases)
-   - Uses Repository interfaces for dependency inversion
-
-3. **Data Layer**
-   - Manages data sources (Local: Room Database, Remote: Retrofit API)
-   - Implements Repository pattern
-
-### Dependency Injection
-
-The app utilizes Dependency Injection for better modularity and testability:
-
-✅ **Hilt** for Dependency Injection  
-✅ **ViewModel Injection** for lifecycle-aware dependencies  
-✅ **Repository Injection** for data handling abstraction  
-
-## State Management
-
-✅ Local state management (remember + MutableState)  
-✅ Global state management (ViewModel + StateFlow/LiveData)  
-✅ State Hoisting  
-✅ State Saving  
-✅ Navigation  
-✅ Local Storage using Room Database (SQLite)  
-✅ HTTP Requests using Retrofit  
-
+## 🚀 Future Improvements
+- Implement **biometric authentication** for security.
+- Add **export/import transactions** feature.
+- Integrate **cloud sync** for cross-device access.
 
 ## Design
 Figma Link: [Income & Expense Tracker App](https://www.figma.com/design/x0B0LlOdy5tzRkHFVzeDva/Income-%26-Expense-Tracker-App-(Community)?node-id=0-1&p=f&t=fzUtpXniCU2gqr8k-0)

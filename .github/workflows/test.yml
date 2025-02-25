@@ -1,14 +1,19 @@
-name: Android CI
+name: 🧪 Run Unit Tests
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
+  workflow_run:
+    workflows: ["🎨 Lint Check"]
+    types:
+      - completed
 
 jobs:
-  lint-test-build:
-    name: Lint, Test, and Build
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,11 +30,5 @@ jobs:
       - name: 📦 Set up Gradle Cache
         uses: gradle/gradle-build-action@v2
 
-      - name: 🎨 Run Ktlint (Lint Check)
-        run: ./gradlew lint
-
       - name: 🧪 Run Unit Tests
         run: ./gradlew test
-
-      - name: 🏗️ Build the App
-        run: ./gradlew assembleDebug

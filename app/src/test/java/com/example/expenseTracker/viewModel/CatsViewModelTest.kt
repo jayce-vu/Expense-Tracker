@@ -81,7 +81,7 @@ class CatsViewModelTest {
 
     @Test
     fun testGetEmptyData() =
-        runTest(UnconfinedTestDispatcher()) {
+        runTest(testDispatcher) {
             val expectedRepositories = Response.success(listOf<CatResponse>())
             // Mock the API response
             `when`(catService.fetchCatsImages(0)).thenReturn(expectedRepositories)
@@ -95,7 +95,7 @@ class CatsViewModelTest {
 
     @Test
     fun testGetCatsApiData() =
-        runTest(UnconfinedTestDispatcher()) {
+        runTest(testDispatcher) {
             Dispatchers.setMain(Dispatchers.Unconfined)
             val mockCatsData = MocksCatsDataModel()
             val response = toResponseApiCats(mockCatsData)
@@ -119,7 +119,7 @@ class CatsViewModelTest {
 
     @Test
     fun testGetFavEmptyData() =
-        runTest(UnconfinedTestDispatcher()) {
+        runTest(testDispatcher) {
             val expectedRepositories = Response.success(listOf<FavouriteCatsItem>())
             // Mock the API response
             `when`(catService.fetchFavouriteCats("0")).thenReturn(expectedRepositories)
@@ -133,7 +133,7 @@ class CatsViewModelTest {
 
     @Test
     fun testFetchFavouriteCatsSuccessState() =
-        runTest(UnconfinedTestDispatcher()) {
+        runTest(testDispatcher) {
             Dispatchers.setMain(Dispatchers.Unconfined)
             val mockCatsData = MockFavouriteCatsResponse()
             val apiResponse = toResponseApiFavCats(mockCatsData)
@@ -164,7 +164,7 @@ class CatsViewModelTest {
 
     @Test
     fun testFetchFavouriteCatsErrorState() =
-        runTest(UnconfinedTestDispatcher()) {
+        runTest(testDispatcher) {
             // Define a sample error response for the service
             val errorResponse =
                 Response.error<List<FavouriteCatsItem>>(
@@ -183,7 +183,7 @@ class CatsViewModelTest {
 
     @Test
     fun testFetchFavouriteCatsException() =
-        runTest(UnconfinedTestDispatcher()) {
+        runTest(testDispatcher) {
             // Set up the mock to throw an exception
             `when`(catService.fetchFavouriteCats(TestTags.SUB_ID)).thenThrow(RuntimeException("An error occurred"))
             val result = mCatsRepo.fetchFavouriteCats(TestTags.SUB_ID).toList()

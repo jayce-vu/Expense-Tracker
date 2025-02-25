@@ -3,12 +3,7 @@ package com.example.expenseTracker.viewModel
 import android.app.Application
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.expenseTracker.R
-import com.example.expenseTracker.catMocks.MockFavouriteCatsResponse
-import com.example.expenseTracker.catMocks.MocksCatsDataModel
-import com.example.expenseTracker.catMocks.toResponseApiCats
-import com.example.expenseTracker.catMocks.toResponseApiFavCats
-import com.example.expenseTracker.catMocks.toResponseCats
-import com.example.expenseTracker.catMocks.toResponseFavCats
+import com.example.expenseTracker.catMocks.*
 import com.example.expenseTracker.data.NetworkResult
 import com.example.expenseTracker.data.database.UserDatabase
 import com.example.expenseTracker.data.models.catData.CatResponse
@@ -24,36 +19,27 @@ import com.example.expenseTracker.presentation.ui.features.cats.viewModel.CatsVi
 import com.example.expenseTracker.utils.Constants
 import com.example.expenseTracker.utils.TestTags
 import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
+import kotlinx.coroutines.test.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.ResponseBody.Companion.toResponseBody
-import org.junit.After
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
+import org.junit.*
 import org.junit.rules.TestRule
 import org.junit.runner.RunWith
-import org.mockito.Mock
+import org.mockito.*
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
-import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnitRunner
 import retrofit2.Response
-import kotlin.test.DefaultAsserter.assertEquals
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class CatsViewModelTest {
     private lateinit var mCatsRepo: CatsRepository
-    private val application: Application = mock()
     private lateinit var mViewModel: CatsViewModel
 
     @get:Rule
@@ -62,17 +48,18 @@ class CatsViewModelTest {
     @Mock
     lateinit var catService: CatsService
 
-    private val testDispatcher = StandardTestDispatcher()
+    private val testDispatcher = UnconfinedTestDispatcher()
 
-    @ExperimentalCoroutinesApi
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
+        Dispatchers.setMain(testDispatcher)
+
         val databaseReference = mock(UserDatabase::class.java)
         val apiHelper = CatApiServiceHelperImpl(catService)
         val dbHelper = CatsDatabaseHelperImpl(databaseReference)
         mCatsRepo = CatsRepositoryImpl(apiHelper, dbHelper)
-        Dispatchers.setMain(testDispatcher)
+
         val catUseCase = GetCatsUseCaseImpl(mCatsRepo)
         val favCatUseCase = GetFavCatsUseCaseImpl(mCatsRepo)
 
@@ -80,120 +67,85 @@ class CatsViewModelTest {
     }
 
     @Test
-    fun testGetEmptyData() =
-        runTest(testDispatcher) {
-            val expectedRepositories = Response.success(listOf<CatResponse>())
-            // Mock the API response
-            `when`(catService.fetchCatsImages(0)).thenReturn(expectedRepositories)
-            // Call the method under test
-            val result = catService.fetchCatsImages(0)
-            // Verify that the API method is called with the correct username
-            verify(catService).fetchCatsImages(0)
-            // Verify that the result matches the expected repositories
-            assert(result == expectedRepositories)
-        }
+    fun `test get empty cats data`() = runTest {
+        val expectedRepositories = Response.success(emptyList<CatResponse>())
+        `when`(catService.fetchCatsImages(0)).thenReturn(expectedRepositories)
+
+        val result = catService.fetchCatsImages(0)
+
+        verify(catService).fetchCatsImages(0)
+        assertEquals(expectedRepositories, result)
+    }
 
     @Test
     fun testGetCatsApiData() =
         runTest(testDispatcher) {
-            Dispatchers.setMain(Dispatchers.Unconfined)
             val mockCatsData = MocksCatsDataModel()
             val response = toResponseApiCats(mockCatsData)
             val verifyData = toResponseCats(mockCatsData)
-            `when`(catService.fetchCatsImages(10)).thenReturn(response) // Mock the API response
+
+            `when`(catService.fetchCatsImages(10)).thenReturn(response)
             verify(catService).fetchCatsImages(10)
             mViewModel.getCatsData()
-            testDispatcher.scheduler.advanceUntilIdle() // Let the coroutine complete and changes propagate
+            testDispatcher.scheduler.advanceUntilIdle()
             val result = mViewModel.state.value.cats
-            assertEquals(
-                application.getString(R.string.both_are_not_equal),
-                result.size,
-                verifyData.size,
-            )
-            assertEquals(
-                application.getString(R.string.both_are_not_equal),
-                result[0].url,
-                verifyData[0].url,
-            )
+            assertEquals(verifyData.size, result.size)
+            assertEquals(verifyData[0].url, result[0].url)
         }
 
     @Test
-    fun testGetFavEmptyData() =
-        runTest(testDispatcher) {
-            val expectedRepositories = Response.success(listOf<FavouriteCatsItem>())
-            // Mock the API response
-            `when`(catService.fetchFavouriteCats("0")).thenReturn(expectedRepositories)
-            // Call the method under test
-            val result = catService.fetchFavouriteCats("0")
-            // Verify that the API method is called with the correct username
-            verify(catService).fetchFavouriteCats("0")
-            // Verify that the result matches the expected repositories
-            assert(result == expectedRepositories)
-        }
+    fun `test get favourite empty data`() = runTest {
+        val expectedRepositories = Response.success(emptyList<FavouriteCatsItem>())
+        `when`(catService.fetchFavouriteCats("0")).thenReturn(expectedRepositories)
+
+        val result = catService.fetchFavouriteCats("0")
+
+        verify(catService).fetchFavouriteCats("0")
+        assertEquals(expectedRepositories, result)
+    }
 
     @Test
-    fun testFetchFavouriteCatsSuccessState() =
-        runTest(testDispatcher) {
-            Dispatchers.setMain(Dispatchers.Unconfined)
-            val mockCatsData = MockFavouriteCatsResponse()
-            val apiResponse = toResponseApiFavCats(mockCatsData)
-            val verifyData = toResponseFavCats(mockCatsData)
+    fun `test fetch favourite cats success state`() = runTest {
+        val mockCatsData = MockFavouriteCatsResponse()
+        val apiResponse = toResponseApiFavCats(mockCatsData)
+        val verifyData = toResponseFavCats(mockCatsData)
 
-            whenever(catService.fetchFavouriteCats(Constants.SUB_ID)).thenReturn(apiResponse)
+        whenever(catService.fetchFavouriteCats(Constants.SUB_ID)).thenReturn(apiResponse)
 
-            // Act
-            val result = mCatsRepo.fetchTestFavouriteCats(Constants.SUB_ID).toList()
+        val result = mCatsRepo.fetchTestFavouriteCats(Constants.SUB_ID).toList()
 
-            // Assert
-            assert(result[1] is NetworkResult.Success)
-            assertEquals(
-                application.getString(R.string.both_are_not_equal),
-                result[1].data?.size,
-                verifyData.data?.size,
-            )
-            assertEquals(
-                application.getString(R.string.both_are_not_equal),
-                result[1]
-                    .data
-                    ?.get(0)
-                    ?.image
-                    ?.url,
-                verifyData.data?.get(0)?.url,
-            )
-        }
+        assertTrue(result[1] is NetworkResult.Success)
+        assertEquals(verifyData.data?.size, result[1].data?.size)
+        assertEquals(verifyData.data?.get(0)?.url, result[1].data?.get(0)?.image?.url)
+    }
 
     @Test
-    fun testFetchFavouriteCatsErrorState() =
-        runTest(testDispatcher) {
-            // Define a sample error response for the service
-            val errorResponse =
-                Response.error<List<FavouriteCatsItem>>(
-                    400,
-                    "Error message".toResponseBody(
-                        "application/json".toMediaType(),
-                    ),
-                )
-            // Set up the mock to return the error response
-            `when`(catService.fetchFavouriteCats(TestTags.SUB_ID)).thenReturn(errorResponse)
-            val result = mCatsRepo.fetchFavouriteCats(TestTags.SUB_ID).toList()
-            verify(catService).fetchFavouriteCats(TestTags.SUB_ID)
-            assert(result[1] is NetworkResult.Error)
-            val errorResult = result[1] as NetworkResult.Error
-        }
+    fun `test fetch favourite cats error state`() = runTest {
+        val errorResponse = Response.error<List<FavouriteCatsItem>>(
+            400,
+            "Error message".toResponseBody("application/json".toMediaType())
+        )
+
+        `when`(catService.fetchFavouriteCats(TestTags.SUB_ID)).thenReturn(errorResponse)
+
+        val result = mCatsRepo.fetchFavouriteCats(TestTags.SUB_ID).toList()
+
+        verify(catService).fetchFavouriteCats(TestTags.SUB_ID)
+        assertTrue(result[1] is NetworkResult.Error)
+    }
 
     @Test
-    fun testFetchFavouriteCatsException() =
-        runTest(testDispatcher) {
-            // Set up the mock to throw an exception
-            `when`(catService.fetchFavouriteCats(TestTags.SUB_ID)).thenThrow(RuntimeException("An error occurred"))
-            val result = mCatsRepo.fetchFavouriteCats(TestTags.SUB_ID).toList()
-            verify(catService).fetchFavouriteCats(TestTags.SUB_ID)
-            assert(result[1] is NetworkResult.Error)
-            val errorResult = result[1] as NetworkResult.Error
-        }
+    fun `test fetch favourite cats exception`() = runTest {
+        `when`(catService.fetchFavouriteCats(TestTags.SUB_ID)).thenThrow(RuntimeException("An error occurred"))
+
+        val result = mCatsRepo.fetchFavouriteCats(TestTags.SUB_ID).toList()
+
+        verify(catService).fetchFavouriteCats(TestTags.SUB_ID)
+        assertTrue(result[1] is NetworkResult.Error)
+    }
 
     @After
     fun tearDown() {
-        Dispatchers.resetMain() // reset the main dispatcher to the original Main dispatcher
+        Dispatchers.resetMain()
     }
 }

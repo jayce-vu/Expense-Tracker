@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Expense-Tracker</string>
+    <string name="img">Xem ảnh toàn màn hình\n</string>
+    <string name="no_internet_connection">Không có kết nối Internet</string>
+    <string name="cats_are_loaded">Danh sách mèo đã tải xong.</string>
+    <string name="you_can_check_your_call_favourite_cats">"Bạn có thể kiểm tra danh sách mèo yêu thích."</string>
+    <string name="my_favourite">Yêu thích của tôi</string>
+    <string name="favourite_icon">Biểu tượng yêu thích</string>
+    <string name="my_favorites">Danh sách yêu thích</string>
+    <string name="home">Trang chủ</string>
+    <string name="home_screen">Màn hình chính</string>
+    <string name="both_are_not_equal">Hai giá trị không bằng nhau</string>
+    <string name="cat_image">Hình ảnh mèo</string>
+    <string name="favorite_screen_empty_list_text">Bạn chưa thêm\nbất kỳ con mèo nào vào danh sách yêu thích</string>
+    <string name="choose_language">Chọn Ngôn Ngữ</string>
+    <string name="cancel">Huỷ</string>
+</resources>

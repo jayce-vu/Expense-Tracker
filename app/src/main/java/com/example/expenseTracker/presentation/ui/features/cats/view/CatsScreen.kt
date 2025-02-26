@@ -8,6 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -71,6 +72,7 @@ import com.example.expenseTracker.presentation.contracts.CatContract
 import com.example.expenseTracker.presentation.ui.components.EmptyView
 import com.example.expenseTracker.presentation.ui.features.cats.navigation.NavigationScreens
 import com.example.expenseTracker.presentation.ui.features.cats.navigation.getBottomNavigationItems
+import com.example.expenseTracker.presentation.ui.features.chooseLanguages.ChooseLanguages
 import com.example.expenseTracker.presentation.ui.theme.Black80
 import com.example.expenseTracker.presentation.ui.theme.ExpenseTrackerTheme
 import com.example.expenseTracker.presentation.ui.theme.lightYellow
@@ -267,15 +269,18 @@ private fun CatAppBar(
         },
         actions = {
             // Show the "Refresh" button only when showRefreshButton is true
-            if (showRefreshButton) {
-                IconButton(
-                    onClick = onRefreshCall,
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Refresh,
-                        contentDescription = TestTags.REFRESH_ACTION,
-                    )
+            Row {
+                if (showRefreshButton) {
+                    IconButton(
+                        onClick = onRefreshCall,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Refresh,
+                            contentDescription = TestTags.REFRESH_ACTION,
+                        )
+                    }
                 }
+                ChooseLanguages()
             }
         },
         colors =

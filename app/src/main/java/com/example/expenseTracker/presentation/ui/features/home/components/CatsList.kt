@@ -29,7 +29,6 @@ import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.unit.dp
 import com.example.expenseTracker.R
 import com.example.expenseTracker.domain.mappers.CatDataModel
-import com.example.expenseTracker.presentation.ui.theme.Black80
 import com.example.expenseTracker.utils.TestTags
 
 @Composable
@@ -78,7 +77,7 @@ fun CatsList(
                             Column(
                                 modifier =
                                 Modifier
-                                    .background(Black80)
+                                    .background(Color.Gray)
                                     .fillMaxWidth()
                                     .align(Alignment.BottomStart),
                             ) {

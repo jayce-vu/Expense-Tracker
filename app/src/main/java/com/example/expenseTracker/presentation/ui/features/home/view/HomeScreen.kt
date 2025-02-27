@@ -1,196 +1,175 @@
 package com.example.expenseTracker.presentation.ui.features.home.view
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.widget.Toast
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults.centerAlignedTopAppBarColors
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.semantics.testTag
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavController
 import com.example.expenseTracker.R
-import com.example.expenseTracker.domain.mappers.CatDataModel
-import com.example.expenseTracker.presentation.contracts.BaseContract
-import com.example.expenseTracker.presentation.contracts.CatContract
-import com.example.expenseTracker.presentation.ui.components.CommonAppBar
-import com.example.expenseTracker.presentation.ui.components.EmptyView
-import com.example.expenseTracker.presentation.ui.components.LoadingBar
-import com.example.expenseTracker.presentation.ui.features.home.navigation.NavigationScreens
-import com.example.expenseTracker.presentation.ui.features.home.navigation.getBottomNavigationItems
-import com.example.expenseTracker.presentation.ui.features.chooseLanguages.ChooseLanguages
-import com.example.expenseTracker.presentation.ui.features.home.components.CatsList
-import com.example.expenseTracker.presentation.ui.features.home.navigation.CommonNavigationBar
-import com.example.expenseTracker.presentation.ui.features.home.navigation.NavController
 import com.example.expenseTracker.presentation.ui.features.home.viewModel.HomeViewModel
-import com.example.expenseTracker.presentation.ui.theme.Black80
+import com.example.expenseTracker.presentation.ui.layouts.BaseScreen
+import com.example.expenseTracker.presentation.ui.navigation.NavigationScreens
 import com.example.expenseTracker.presentation.ui.theme.ExpenseTrackerTheme
-import com.example.expenseTracker.presentation.ui.theme.lightYellow
-import com.example.expenseTracker.utils.TestTags
-import com.example.expenseTracker.utils.TestTags.PROGRESS_BAR
-import com.skydoves.landscapist.CircularReveal
-import com.skydoves.landscapist.ShimmerParams
-import com.skydoves.landscapist.glide.GlideImage
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.receiveAsFlow
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun HomeScreen(
-    onRefreshCall: () -> Unit,
-) {
-
-    val context = LocalContext.current
-    val navigationSelectedItem by remember {
-        mutableIntStateOf(0)
-    }
-
-    val navController = rememberNavController()
-    val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
-    val hideBottomBarScreens =
-        listOf(NavigationScreens.Home.screenRoute, NavigationScreens.MyFavorites.screenRoute)
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        bottomBar = {
-            if (currentRoute in hideBottomBarScreens)
-                CommonNavigationBar(context, navigationSelectedItem, navController)
-        },
-    ) { paddingValues ->
-        NavController(navController, paddingValues)
-    }
-}
-
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@Composable
-fun UserView(
-    viewModel: HomeViewModel = hiltViewModel<HomeViewModel>(),
-    isFavCatsCall: Boolean,
-    onNavigationRequested: (itemUrl: String, imageId: String) -> Unit,
-    navController: NavHostController
-) {
-    val snackBarHostState = remember { SnackbarHostState() }
-    val catMessage = stringResource(R.string.cats_are_loaded)
-
-    val state = viewModel.state.collectAsState().value
-    val effectFlow = viewModel.effects.receiveAsFlow()
-    LaunchedEffect(effectFlow) {
-        effectFlow
-            .onEach { effect ->
-                if (effect is BaseContract.Effect.DataWasLoaded) {
-                    snackBarHostState.showSnackbar(
-                        message = catMessage,
-                        duration = SnackbarDuration.Short,
-                    )
-                }
-            }.collect { value ->
-                if (value is BaseContract.Effect.Error) {
-                    // Handle other emitted values if needed
-                    snackBarHostState.showSnackbar(
-                        message = "ERROR",
-                        duration = SnackbarDuration.Short,
-                    )
-                }
-            }
-    }
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = {
-            CommonAppBar(
-                showRefreshButton = !isFavCatsCall,
-                onNavigationIconClick = {
-                },
-                onRefreshCall = {
-                    navController.navigate(NavigationScreens.Login.screenRoute)
-                },
-            )
-        },
-    ) { paddings ->
-        Surface(
-            modifier =
-            Modifier.fillMaxSize().padding(paddings).semantics {
-                testTag =
-                    if (isFavCatsCall) TestTags.MY_FAVOURITE_SCREEN_TAG else TestTags.HOME_SCREEN_TAG
-            },
+fun HomeScreen(navController: NavController) {
+    val color = MaterialTheme.colorScheme
+    val style = MaterialTheme.typography
+    val viewModel = hiltViewModel<HomeViewModel>()
+    val state by viewModel.state.collectAsState()
+    BaseScreen(
+        title = "Home",
+        showAppBar = false,
+        disablePadding = true,
+        navController = navController
+    ) {
+        Image(
+            painter = painterResource(R.drawable.app_bar_background),
+            "Image background"
+        )
+        Box(
+            modifier = Modifier
+                .padding(top = 150.dp)
+                .padding(horizontal = 16.dp),
+            contentAlignment = Alignment.Center
         ) {
-            Box {
-                val cats = if (isFavCatsCall) state.favCatsList else state.cats
-                if (isFavCatsCall && cats.isEmpty()) {
-                    EmptyView(message = stringResource(R.string.favorite_screen_empty_list_text))
-                } else {
-                    CatsList(
-                        cats = cats,
-                        isLoading = state.isLoading,
-                        isFavCatsCall = isFavCatsCall,
-                    ) { itemUrl, imageId ->
-                        onNavigationRequested(itemUrl, imageId)
+            Column(modifier = Modifier.fillMaxSize()) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp),
+                    elevation = CardDefaults.cardElevation(
+                        defaultElevation = 12.dp
+                    ),
+                    colors = CardColors(
+                        containerColor = color.inversePrimary,
+                        contentColor = color.onPrimary,
+                        disabledContainerColor = color.background,
+                        disabledContentColor = color.inversePrimary
+                    )
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(24.dp),
+                        verticalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row {
+                            Column {
+                                Text("Total balance", style = style.titleLarge)
+                                Text("2000$")
+                            }
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            BalanceItem(
+                                style,
+                                color,
+                                "Income",
+                                viewModel.formatAmount(state.income),
+                                Icons.Filled.KeyboardArrowDown
+                            )
+                            BalanceItem(
+                                style,
+                                color,
+                                "Expense",
+                                viewModel.formatAmount(state.expense),
+                                Icons.Filled.KeyboardArrowUp
+                            )
+                        }
                     }
                 }
-                if (state.isLoading) {
-                    LoadingBar()
+                TransactionList(style) {
+                    navController.navigate(NavigationScreens.TransactionHistory.screenRoute)
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun TransactionList(style: Typography, onSeeAll: () -> Unit) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
+            Text("Transactions", style = style.titleLarge)
+            TextButton(onClick = onSeeAll) {
+                Text("See all", style = style.titleMedium)
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewTransactionList() {
+    Surface(modifier = Modifier.width(300.dp)) {
+        TransactionList(MaterialTheme.typography) {}
+    }
+}
+
+@Composable
+private fun BalanceItem(
+    style: Typography,
+    color: ColorScheme,
+    title: String,
+    amount: String,
+    icon: ImageVector
+) {
+    Column {
+        Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+            Box(
+                modifier = Modifier
+                    .clip(
+                        RoundedCornerShape(size = 20.dp)
+                    )
+                    .background(color = color.secondary.copy(alpha = 0.3f)),
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = title
+                )
+            }
+
+            Text(title, style = style.titleMedium)
+        }
+        Text(amount, style = style.titleLarge)
     }
 }
 
@@ -198,8 +177,6 @@ fun UserView(
 @Composable
 fun DefaultPreview() {
     ExpenseTrackerTheme {
-        HomeScreen(
-            onRefreshCall = {},
-        )
+        HomeScreen(NavController(LocalContext.current))
     }
 }

@@ -49,7 +49,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.expenseTracker.R
 import com.example.expenseTracker.presentation.ui.theme.ExpenseTrackerTheme
-import com.example.expenseTracker.presentation.ui.theme.favourite
 import com.example.expenseTracker.utils.Constants
 import com.example.expenseTracker.utils.TestTags
 import com.example.expenseTracker.utils.TestTags.BACK_NAVIGATION_ICON_DESCRIPTION
@@ -206,7 +205,7 @@ fun CatDetailPreview() {
 @Composable
 fun FavoriteButton(
     modifier: Modifier = Modifier,
-    color: Color = favourite,
+    color: Color = MaterialTheme.colorScheme.onPrimary,
     isFavourite: Boolean,
     favSelection: (isFav: Boolean) -> Unit = {},
 ) {

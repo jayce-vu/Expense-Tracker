@@ -14,9 +14,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.App.Starting"
         android:name=".BaseApplication"
-        tools:targetApi="31">
+        android:usesCleartextTraffic="true"
+        >
         <activity
-            android:name="com.example.expenseTracker.presentation.ui.features.home.HomeActivity"
+            android:name="com.example.expenseTracker.presentation.ui.features.HomeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
             android:theme="@style/Theme.ExpenseTracker">

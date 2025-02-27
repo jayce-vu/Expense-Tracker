@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.expenseTracker.data.database.dao.ExampleDAO
 import com.example.expenseTracker.data.database.entities.ExampleEntity
-import com.example.expenseTracker.utils.Constants.Companion.DATABASE_NAME
+import com.example.expenseTracker.utils.Constants.DATABASE_NAME
 
 @Database(
     entities = [

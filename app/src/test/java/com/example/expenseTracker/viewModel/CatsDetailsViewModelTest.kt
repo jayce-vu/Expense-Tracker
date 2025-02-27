@@ -1,10 +1,10 @@
 package com.example.expenseTracker.viewModel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.example.expenseTracker.catMocks.MockPostFavCatModel
-import com.example.expenseTracker.catMocks.MockSuccessResponse
-import com.example.expenseTracker.catMocks.toRequestPostFavCatData
-import com.example.expenseTracker.catMocks.toResponsePostSuccess
+import com.example.expenseTracker.mocks.MockPostFavCatModel
+import com.example.expenseTracker.mocks.MockSuccessResponse
+import com.example.expenseTracker.mocks.toRequestPostFavCatData
+import com.example.expenseTracker.mocks.toResponsePostSuccess
 import com.example.expenseTracker.data.database.UserDatabase
 import com.example.expenseTracker.data.models.SuccessResponse
 import com.example.expenseTracker.data.repositories.CatDetailsRepositoryImpl

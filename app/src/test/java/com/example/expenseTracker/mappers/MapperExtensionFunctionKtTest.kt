@@ -1,8 +1,8 @@
 package com.example.expenseTracker.mappers
 
-import com.example.expenseTracker.catMocks.MockFavouriteCatsResponse
-import com.example.expenseTracker.catMocks.MockSuccessResponse
-import com.example.expenseTracker.catMocks.MocksCatsDataModel
+import com.example.expenseTracker.mocks.MockFavouriteCatsResponse
+import com.example.expenseTracker.mocks.MockSuccessResponse
+import com.example.expenseTracker.mocks.MocksCatsDataModel
 import com.example.expenseTracker.data.models.SuccessResponse
 import com.example.expenseTracker.data.models.catData.CatResponse
 import com.example.expenseTracker.data.models.catData.FavouriteCatsItem

@@ -7,19 +7,19 @@ import android.os.LocaleList
 import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
-import com.example.expenseTracker.data.EncryptedPreferenceManager
+import com.example.expenseTracker.data.preference.EncryptedPreferenceManager
+import com.example.expenseTracker.data.preference.EncryptedPreferenceManagerImpl
 import javax.inject.Inject
 
 class LocaleHelper @Inject constructor(
     private val encryptedPreferenceManager: EncryptedPreferenceManager
 ) {
 
-    private fun getCurrentLanguage(): String {
+    fun getCurrentLanguage(): String {
         return encryptedPreferenceManager.getLanguage()
     }
 
     fun updateBaseContext(context: Context) {
-        Log.d("LocaleHelper", "updateBaseContext: ${getCurrentLanguage()}")
         setLocale(context, getCurrentLanguage())
     }
 

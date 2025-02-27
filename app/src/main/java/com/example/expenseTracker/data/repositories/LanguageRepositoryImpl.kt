@@ -1,6 +1,7 @@
 package com.example.expenseTracker.data.repositories
 
-import com.example.expenseTracker.data.EncryptedPreferenceManager
+import com.example.expenseTracker.data.preference.EncryptedPreferenceManager
+import com.example.expenseTracker.data.preference.EncryptedPreferenceManagerImpl
 import com.example.expenseTracker.domain.repositories.LanguageRepository
 import javax.inject.Inject
 import javax.inject.Singleton

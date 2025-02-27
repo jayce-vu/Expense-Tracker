@@ -2,17 +2,19 @@ package com.example.expenseTracker.utils
 
 import com.example.expenseTracker.BuildConfig
 
-class Constants {
-    companion object {
-        internal const val HOME_ROUTES: String = "home_route"
-        internal const val MY_FAVOURITES_ROUTES: String = "my_favourites"
-        internal const val IMAGE_ID: String = "image_iD"
-        internal const val FAV_ID: String = "favourite_id"
-        internal val BASE_URL: String = BuildConfig.baseUrl
-        internal val SHARED_PREFERENCES: String = BuildConfig.prefName
-        internal val PREF_PASSWORD: String = BuildConfig.prefPassword
-        internal const val URL: String = "image_url"
-        internal const val DATABASE_NAME: String = "expense_tracker.db"
-        internal const val SUB_ID: String = "my-user97"
-    }
+object Constants {
+    const val IMAGE_ID = "image_iD"
+    const val FAV_ID = "favourite_id"
+    const val BASE_URL = BuildConfig.baseUrl
+    const val SHARED_PREFERENCES = BuildConfig.prefName
+    const val PREF_PASSWORD = BuildConfig.prefPassword
+    const val URL = "image_url"
+    const val DATABASE_NAME = "expense_tracker.db"
+    const val SUB_ID = "my-user97"
+}
+
+object Routes {
+    const val HOME_SCREEN = "home_screen"
+    const val MY_FAVOURITES_SCREEN = "my_favourites"
+    const val LOGIN_SCREEN = "login_screen"
 }

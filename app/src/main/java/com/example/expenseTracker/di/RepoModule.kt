@@ -1,6 +1,7 @@
 package com.example.expenseTracker.di
 
-import com.example.expenseTracker.data.EncryptedPreferenceManager
+import com.example.expenseTracker.data.preference.EncryptedPreferenceManager
+import com.example.expenseTracker.data.preference.EncryptedPreferenceManagerImpl
 import com.example.expenseTracker.data.repositories.CatDetailsRepositoryImpl
 import com.example.expenseTracker.data.repositories.CatsRepositoryImpl
 import com.example.expenseTracker.data.repositories.LanguageRepositoryImpl

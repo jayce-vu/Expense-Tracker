@@ -133,6 +133,7 @@ dependencies {
     implementation(libs.androidx.ui)
     // Hilt
     implementation(libs.dagger.hilt.android)
+    implementation(libs.androidx.hilt.navigation.compose)
     ksp(libs.dagger.compiler)
     ksp(libs.dagger.hilt.android.compiler)
     // Retrofit
@@ -153,4 +154,6 @@ dependencies {
     testImplementation(libs.androidx.room.testing)
     ksp(libs.androidx.room.compiler)
     implementation(kotlin("test"))
+    // splash screen
+    implementation(libs.androidx.core.splashscreen)
 }

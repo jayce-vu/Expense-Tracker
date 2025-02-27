@@ -1,7 +1,8 @@
 package com.example.expenseTracker.di
 
 import android.content.Context
-import com.example.expenseTracker.data.EncryptedPreferenceManager
+import com.example.expenseTracker.data.preference.EncryptedPreferenceManager
+import com.example.expenseTracker.data.preference.EncryptedPreferenceManagerImpl
 import com.example.expenseTracker.utils.LocaleHelper
 import dagger.Module
 import dagger.Provides
@@ -18,7 +19,7 @@ object AppModules {
     fun provideEncryptedPreferenceManager(
         @ApplicationContext context: Context
     ): EncryptedPreferenceManager {
-        return EncryptedPreferenceManager(context)
+        return EncryptedPreferenceManagerImpl(context)
     }
 
     @Provides

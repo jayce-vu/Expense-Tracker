@@ -4,11 +4,10 @@ import android.app.LocaleManager
 import android.content.Context
 import android.os.Build
 import android.os.LocaleList
-import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import com.example.expenseTracker.data.preference.EncryptedPreferenceManager
-import com.example.expenseTracker.data.preference.EncryptedPreferenceManagerImpl
+import java.util.Locale
 import javax.inject.Inject
 
 class LocaleHelper @Inject constructor(
@@ -17,6 +16,15 @@ class LocaleHelper @Inject constructor(
 
     fun getCurrentLanguage(): String {
         return encryptedPreferenceManager.getLanguage()
+    }
+
+    fun getLocale(): Locale {
+        val language = encryptedPreferenceManager.getLanguage()
+        return if(language == "vi"){
+            Locale("vi","VN")
+        } else {
+            Locale("en","US")
+        }
     }
 
     fun updateBaseContext(context: Context) {

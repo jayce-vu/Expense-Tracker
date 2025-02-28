@@ -17,4 +17,9 @@ object Routes {
     const val HOME_SCREEN = "home_screen"
     const val MY_FAVOURITES_SCREEN = "my_favourites"
     const val LOGIN_SCREEN = "login_screen"
+    const val SIGN_UP_SCREEN = "sign_up_screen"
+    const val GET_STARTED_SCREEN = "get_started_screen"
+    const val PROFILE_SCREEN = "profile_screen"
+    const val ADD_EXPENSE_SCREEN = "add_expense_screen"
+    const val TRANSACTION_HISTORY_SCREEN = "transaction_history_screen"
 }

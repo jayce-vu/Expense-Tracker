@@ -14,4 +14,5 @@
     <string name="favorite_screen_empty_list_text">You haven\'t added\nany cat to your favorites yet</string>
     <string name="choose_language">Choose Language</string>
     <string name="cancel">Cancel</string>
+    <string name="profile">Profile</string>
 </resources>

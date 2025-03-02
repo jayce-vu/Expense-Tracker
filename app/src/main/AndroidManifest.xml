@@ -17,7 +17,7 @@
         android:usesCleartextTraffic="true"
         >
         <activity
-            android:name="com.example.expenseTracker.presentation.ui.features.HomeActivity"
+            android:name="com.example.expenseTracker.presentation.features.HomeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
             android:theme="@style/Theme.ExpenseTracker">
@@ -26,10 +26,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.example.expenseTracker.presentation.ui.features.catDetails.CatFullImageActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:exported="false" />
     </application>
 
 </manifest>

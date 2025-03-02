@@ -1,10 +1,11 @@
 package com.example.expenseTracker.network.interceptor
 
+import com.example.expenseTracker.data.preference.EncryptedPreferenceManager
 import okhttp3.Headers
 import okhttp3.Interceptor
 import okhttp3.Response
 
-class HeaderInterceptor : Interceptor {
+class HeaderInterceptor(private val encryptedPreferenceManager: EncryptedPreferenceManager) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val mutableHeaders: MutableMap<String, String> =
             chain
@@ -23,17 +24,22 @@ class HeaderInterceptor : Interceptor {
             mutableHeaders["Content-Type"] = "application/json"
         }
 
-        if (!mutableHeaders.containsKey("x-api-key")) {
-            mutableHeaders["x-api-key"] = "DEMO-API-KEY"
+        // Retrieve the authentication token
+        val authToken = encryptedPreferenceManager.getToken()
+        if (authToken.isNotEmpty()) {
+            mutableHeaders["Authorization"] = "Bearer $authToken"
         }
 
-        val headerBuilder: Headers.Builder = Headers.Builder()
-        for ((k, v) in mutableHeaders.entries) {
-            headerBuilder.add(k, v)
+        // Build headers
+        val headerBuilder = Headers.Builder()
+        for ((key, value) in mutableHeaders.entries) {
+            headerBuilder.add(key, value)
         }
 
         val request = chain.request().newBuilder()
-        request.headers(headerBuilder.build())
-        return chain.proceed(request.build())
+            .headers(headerBuilder.build())
+            .build()
+
+        return chain.proceed(request)
     }
 }

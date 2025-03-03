@@ -10,15 +10,19 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
-@InstallIn(ViewModelComponent::class)
+@InstallIn(SingletonComponent::class)
 object RepoModule {
+    @Singleton
     @Provides
     fun provideUserRepository(
         userService: UserService,
     ): UserRepository = UserRepositoryImpl(userService)
 
+    @Singleton
     @Provides
     fun provideLanguageRepository(
         encryptedPreferenceManager: EncryptedPreferenceManager

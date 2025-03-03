@@ -1,6 +1,7 @@
 package com.example.expenseTracker.di
 
 import com.example.expenseTracker.domain.repositories.UserRepository
+import com.example.expenseTracker.domain.usecase.users.UserInfoUseCase
 import com.example.expenseTracker.domain.usecase.users.UserLoginUseCase
 import com.example.expenseTracker.domain.usecase.users.UserSignUpUseCase
 import dagger.Module
@@ -16,4 +17,7 @@ object UseCaseModule {
 
     @Provides
     fun provideSignUpUseCase(userRepository: UserRepository): UserSignUpUseCase = UserSignUpUseCase(userRepository)
+
+    @Provides
+    fun provideGetUserUseCase(userRepository: UserRepository): UserInfoUseCase = UserInfoUseCase(userRepository)
 }

@@ -38,10 +38,10 @@ import com.example.expenseTracker.R
 import com.example.expenseTracker.presentation.components.AppButton
 import com.example.expenseTracker.presentation.components.AppOutlinedTextField
 import com.example.expenseTracker.presentation.components.GoogleSignInButton
-import com.example.expenseTracker.presentation.features.login.viewModel.LoginErrorState
-import com.example.expenseTracker.presentation.features.login.viewModel.LoginLoadingState
-import com.example.expenseTracker.presentation.features.login.viewModel.LoginSuccessState
-import com.example.expenseTracker.presentation.features.login.viewModel.LoginViewModel
+import com.example.expenseTracker.presentation.features.authentication.viewModel.AuthenticatingState
+import com.example.expenseTracker.presentation.features.authentication.viewModel.AuthenticationViewModel
+import com.example.expenseTracker.presentation.features.authentication.viewModel.LoggedInState
+import com.example.expenseTracker.presentation.features.authentication.viewModel.LoginErrorState
 import com.example.expenseTracker.presentation.layouts.BaseScreen
 import com.example.expenseTracker.presentation.navigation.NavigationScreens
 import com.example.expenseTracker.presentation.theme.White
@@ -54,11 +54,11 @@ fun LoginScreen(navController: NavController) {
     val style = MaterialTheme.typography
     var email by remember { mutableStateOf("vucaoit@gmail.com") }
     var password by remember { mutableStateOf("123456") }
-    val viewModel = hiltViewModel<LoginViewModel>()
+    val viewModel = hiltViewModel<AuthenticationViewModel>()
     val state by viewModel.state.collectAsState()
 
     LaunchedEffect(state) {
-        if (state is LoginSuccessState) {
+        if (state is LoggedInState) {
             navController.navigateAndReplace(NavigationScreens.Home.screenRoute)
         }
     }
@@ -135,7 +135,7 @@ fun LoginScreen(navController: NavController) {
                             // Login Button
                             AppButton(
                                 onClick = {
-                                    if (state !is LoginLoadingState) {
+                                    if (state !is AuthenticatingState) {
                                         viewModel.login(email, password)
                                     }
                                 },

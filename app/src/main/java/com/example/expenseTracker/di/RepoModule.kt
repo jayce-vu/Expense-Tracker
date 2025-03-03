@@ -6,10 +6,10 @@ import com.example.expenseTracker.data.repositories.UserRepositoryImpl
 import com.example.expenseTracker.data.services.UserService
 import com.example.expenseTracker.domain.repositories.LanguageRepository
 import com.example.expenseTracker.domain.repositories.UserRepository
+import com.example.expenseTracker.network.SessionManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -20,7 +20,8 @@ object RepoModule {
     @Provides
     fun provideUserRepository(
         userService: UserService,
-    ): UserRepository = UserRepositoryImpl(userService)
+        sessionManager: SessionManager
+    ): UserRepository = UserRepositoryImpl(userService, sessionManager)
 
     @Singleton
     @Provides

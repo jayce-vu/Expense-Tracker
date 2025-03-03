@@ -28,13 +28,13 @@ fun AppMenuItem(
     title: String,
     isLogout: Boolean = false,
     iconPainter: Painter? = null,
-    onClick: () -> Unit
+    onClick: (() -> Unit)? = null
 ) {
     val iconSize = 28.dp
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
+            .clickable(onClick = { onClick?.invoke() })
             .padding(vertical = 16.dp, horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -43,14 +43,18 @@ fun AppMenuItem(
                 imageVector = icon,
                 contentDescription = "$title Icon",
                 tint = if (isLogout) Color.Red else Color.Gray,
-                modifier = Modifier.padding(end = 16.dp).size(iconSize),
+                modifier = Modifier
+                    .padding(end = 16.dp)
+                    .size(iconSize),
             )
         } else if (icon == null && iconPainter != null) {
             Icon(
                 painter = iconPainter,
                 contentDescription = "$title Icon",
                 tint = if (isLogout) Color.Red else Color.Gray,
-                modifier = Modifier.padding(end = 16.dp).size(iconSize),
+                modifier = Modifier
+                    .padding(end = 16.dp)
+                    .size(iconSize),
             )
         }
         Text(

@@ -9,14 +9,14 @@ import com.example.expenseTracker.data.services.postModel.PostSignup
 import com.example.expenseTracker.data.services.responseModels.LoginResponseModel
 import com.example.expenseTracker.data.services.responseModels.SignupResponseModel
 import com.example.expenseTracker.domain.repositories.UserRepository
-import kotlinx.coroutines.flow.Flow
+import com.example.expenseTracker.network.SessionManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Singleton
 
 @Singleton
-class UserRepositoryImpl(private val userService: UserService) : UserRepository {
+class UserRepositoryImpl(private val userService: UserService, private val sessionManager: SessionManager) : UserRepository {
     private val _userInfo = MutableStateFlow<UserInfoModel?>(null)
 
     override suspend fun login(
@@ -28,16 +28,18 @@ class UserRepositoryImpl(private val userService: UserService) : UserRepository 
             val result = response.body()
             result?.let { successData ->
                 if(successData.isSuccess()){
-                    Log.d("UserRepositoryImpl", "login: ${successData.data.user}")
+                    sessionManager.saveToken(successData.data.token)
                     _userInfo.update {
                         successData.data.user
                     }
                     return (NetworkResult.Success(response.body()?.data))
                 } else {
+                    sessionManager.clearSession()
                     return (NetworkResult.Error(successData.message))
                 }
             }
         }
+        sessionManager.clearSession()
         return (NetworkResult.Error(response.errorBody().toString()))
     }
 
@@ -56,8 +58,21 @@ class UserRepositoryImpl(private val userService: UserService) : UserRepository 
         return (NetworkResult.Error(response.errorBody().toString()))
     }
 
-    override suspend fun logout() {
-        // TODO("Not yet implemented")
+    override suspend fun logout(): NetworkResult<Boolean> {
+        val response = userService.logout()
+        if (response.isSuccessful) {
+            val result = response.body()
+            result?.let {
+                if(it.isSuccess()){
+                    sessionManager.clearSession()
+                    sessionManager.triggerLogout()
+                    return (NetworkResult.Success(response.body()?.status == "success"))
+                } else {
+                    return (NetworkResult.Error(it.message))
+                }
+            }
+        }
+        return (NetworkResult.Error(response.errorBody().toString()))
     }
 
     override fun getUserInfo(): StateFlow<UserInfoModel?> {

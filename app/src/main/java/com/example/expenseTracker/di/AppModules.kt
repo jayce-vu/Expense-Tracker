@@ -3,6 +3,7 @@ package com.example.expenseTracker.di
 import android.content.Context
 import com.example.expenseTracker.data.preference.EncryptedPreferenceManager
 import com.example.expenseTracker.data.preference.EncryptedPreferenceManagerImpl
+import com.example.expenseTracker.network.SessionManager
 import com.example.expenseTracker.utils.LocaleHelper
 import dagger.Module
 import dagger.Provides
@@ -28,5 +29,11 @@ object AppModules {
         encryptedPreferenceManager: EncryptedPreferenceManager
     ): LocaleHelper {
         return LocaleHelper(encryptedPreferenceManager)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSessionManager(encryptedPreferenceManager: EncryptedPreferenceManager): SessionManager {
+        return SessionManager(encryptedPreferenceManager)
     }
 }

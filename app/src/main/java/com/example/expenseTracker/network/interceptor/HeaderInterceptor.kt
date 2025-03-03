@@ -1,11 +1,11 @@
 package com.example.expenseTracker.network.interceptor
 
-import com.example.expenseTracker.data.preference.EncryptedPreferenceManager
+import com.example.expenseTracker.network.SessionManager
 import okhttp3.Headers
 import okhttp3.Interceptor
 import okhttp3.Response
 
-class HeaderInterceptor(private val encryptedPreferenceManager: EncryptedPreferenceManager) : Interceptor {
+class HeaderInterceptor(private val sessionManager: SessionManager) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val mutableHeaders: MutableMap<String, String> =
             chain
@@ -25,7 +25,7 @@ class HeaderInterceptor(private val encryptedPreferenceManager: EncryptedPrefere
         }
 
         // Retrieve the authentication token
-        val authToken = encryptedPreferenceManager.getToken()
+        val authToken = sessionManager.getToken()
         if (authToken.isNotEmpty()) {
             mutableHeaders["Authorization"] = "Bearer $authToken"
         }
@@ -40,6 +40,12 @@ class HeaderInterceptor(private val encryptedPreferenceManager: EncryptedPrefere
             .headers(headerBuilder.build())
             .build()
 
-        return chain.proceed(request)
+        val response = chain.proceed(request)
+
+        if (response.code == 401) {  // Unauthorized → Token expired
+            sessionManager.clearSession() // Clear session data
+            sessionManager.triggerLogout() // Notify the app to logout
+        }
+        return response
     }
 }

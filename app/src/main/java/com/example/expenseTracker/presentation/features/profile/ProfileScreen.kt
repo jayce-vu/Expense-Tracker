@@ -26,17 +26,17 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.expenseTracker.R
 import com.example.expenseTracker.presentation.components.CircleAvatar
-import com.example.expenseTracker.presentation.features.chooseLanguages.ChooseLanguages
+import com.example.expenseTracker.presentation.features.authentication.viewModel.AuthenticationViewModel
 import com.example.expenseTracker.presentation.features.profile.components.AppMenu
 import com.example.expenseTracker.presentation.features.profile.viewModel.ProfileViewModel
 import com.example.expenseTracker.presentation.layouts.BaseScreen
-import com.example.expenseTracker.presentation.theme.White
 
 @Composable
 fun ProfileScreen(navController: NavController) {
     val color = MaterialTheme.colorScheme
     val style = MaterialTheme.typography
     val viewModel = hiltViewModel<ProfileViewModel>()
+    val authenticationViewModel = hiltViewModel<AuthenticationViewModel>()
     val state by viewModel.state.collectAsState()
     BaseScreen(
         showAppBar = false,
@@ -63,7 +63,9 @@ fun ProfileScreen(navController: NavController) {
                     colors = CardDefaults.cardColors(containerColor = Color.White),
                 ) {
                     Column(
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 28.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 28.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
@@ -80,7 +82,9 @@ fun ProfileScreen(navController: NavController) {
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-                    AppMenu()
+                    AppMenu(onLogout = {
+                        authenticationViewModel.logout()
+                    })
                 }
             }
         }

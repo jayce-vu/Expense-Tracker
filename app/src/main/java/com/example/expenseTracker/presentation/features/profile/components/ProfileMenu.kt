@@ -10,7 +10,9 @@ import androidx.compose.ui.res.painterResource
 import com.example.expenseTracker.R
 
 @Composable
-fun AppMenu() {
+fun AppMenu(
+    onLogout: (() -> Unit)? = null
+) {
     Column {
         AppMenuItem(
             icon = Icons.Default.AccountCircle,
@@ -36,7 +38,7 @@ fun AppMenu() {
             icon = Icons.AutoMirrored.Filled.ExitToApp,
             title = "Logout",
             isLogout = true,
-            onClick = { /* Handle click */ }
+            onClick = onLogout
         )
     }
 }

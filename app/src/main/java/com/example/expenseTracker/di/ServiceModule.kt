@@ -1,8 +1,8 @@
 package com.example.expenseTracker.di
 
 import android.content.Context
-import com.example.expenseTracker.data.preference.EncryptedPreferenceManager
 import com.example.expenseTracker.data.services.UserService
+import com.example.expenseTracker.network.SessionManager
 import com.example.expenseTracker.network.interceptor.HeaderInterceptor
 import com.example.expenseTracker.network.interceptor.NetworkConnectionInterceptor
 import com.example.expenseTracker.utils.Constants
@@ -29,14 +29,14 @@ object ServiceModule {
     @Singleton
     fun provideOkHttpClient(
         @ApplicationContext context: Context,
-        encryptedPreferenceManager: EncryptedPreferenceManager
+        sessionManager: SessionManager
     ): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
 
         return OkHttpClient
             .Builder()
-            .addInterceptor(HeaderInterceptor(encryptedPreferenceManager))
+            .addInterceptor(HeaderInterceptor(sessionManager))
             .addInterceptor(NetworkConnectionInterceptor(context))
             .addInterceptor(loggingInterceptor)
             .writeTimeout(60, TimeUnit.SECONDS)
@@ -49,7 +49,7 @@ object ServiceModule {
     @Provides
     fun provideCustomRetrofit(
         @ApplicationContext context: Context,
-        encryptedPreferenceManager: EncryptedPreferenceManager
+        sessionManager: SessionManager
     ): Retrofit {
         val url = Constants.BASE_URL
 
@@ -81,7 +81,7 @@ object ServiceModule {
             .addConverterFactory(nullOnEmptyConverterFactory)
             .addConverterFactory(GsonConverterFactory.create())
             .baseUrl(url)
-            .client(provideOkHttpClient(context, encryptedPreferenceManager))
+            .client(provideOkHttpClient(context, sessionManager))
             .build()
     }
 

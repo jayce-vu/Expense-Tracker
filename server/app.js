@@ -97,7 +97,7 @@ app.post("/login", (req, res) => {
     }
 
     // Generate JWT
-    const token = jwt.sign({ id: user.id, username: user.email }, SECRET_KEY, { expiresIn: "1h" });
+    const token = jwt.sign({ id: user.id, email: user.email }, SECRET_KEY, { expiresIn: "1h" });
 
     res.json(baseResponse("success", "Login successful", { user: { id: user.id, email: user.email, name: user.name }, token }));
   });
@@ -120,6 +120,8 @@ app.get("/profile", authenticateToken, (req, res) => {
 
 // Logout Route
 app.post("/logout", authenticateToken, (req, res) => {
+  const email = req.user.email;
+  console.log("LOGOUT -->", email)
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
 

@@ -4,7 +4,9 @@ import com.example.expenseTracker.data.NetworkResult
 import com.example.expenseTracker.data.models.UserInfoModel
 import com.example.expenseTracker.data.services.UserService
 import com.example.expenseTracker.data.services.postModel.PostLogin
+import com.example.expenseTracker.data.services.postModel.PostSignup
 import com.example.expenseTracker.data.services.responseModels.LoginResponseModel
+import com.example.expenseTracker.data.services.responseModels.SignupResponseModel
 import com.example.expenseTracker.domain.repositories.UserRepository
 import javax.inject.Singleton
 
@@ -30,8 +32,19 @@ class UserRepositoryImpl(private val userService: UserService) : UserRepository 
         return (NetworkResult.Error(response.errorBody().toString()))
     }
 
-    override suspend fun signup(email: String, password: String, name: String) {
-        // TODO("Not yet implemented")
+    override suspend fun signup(email: String, password: String, name: String): NetworkResult<SignupResponseModel> {
+        val response = userService.signup(PostSignup(name, email, password))
+        if (response.isSuccessful) {
+            val result = response.body()
+            result?.let {
+                if(it.isSuccess()){
+                    return (NetworkResult.Success(response.body()?.data))
+                } else {
+                    return (NetworkResult.Error(it.message))
+                }
+            }
+        }
+        return (NetworkResult.Error(response.errorBody().toString()))
     }
 
     override suspend fun logout() {

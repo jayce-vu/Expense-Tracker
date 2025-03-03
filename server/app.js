@@ -51,7 +51,7 @@ app.post("/signup", (req, res) => {
   }
 
   // Check if user exists
-  db.get("SELECT * FROM users WHERE email = ? OR name = ?", [email], async (err, existingUser) => {
+  db.get("SELECT * FROM users WHERE email = ?", [email], async (err, existingUser) => {
     if (err) return res.status(200).json(baseResponse("error", "Database error", null, err.message));
 
     if (existingUser) {

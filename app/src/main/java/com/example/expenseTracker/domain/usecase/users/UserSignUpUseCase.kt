@@ -1,13 +1,13 @@
-package com.example.expenseTracker.domain.usecase
+package com.example.expenseTracker.domain.usecase.users
 
 import com.example.expenseTracker.data.NetworkResult
-import com.example.expenseTracker.data.services.responseModels.LoginResponseModel
+import com.example.expenseTracker.data.services.responseModels.SignupResponseModel
 import com.example.expenseTracker.domain.repositories.UserRepository
 
-class UserUseCase(private val userRepository: UserRepository) {
-    suspend fun execute(email: String, password: String): NetworkResult<LoginResponseModel>
+class UserSignUpUseCase(private val userRepository: UserRepository) {
+    suspend fun execute(email: String, password: String, name: String): NetworkResult<SignupResponseModel>
         {
-            userRepository.login(email, password).let{ response ->
+            userRepository.signup(email, password, name).let{ response ->
                 when (response) {
                     is NetworkResult.Success -> {
                         return (NetworkResult.Success(response.data))

@@ -1,7 +1,8 @@
 package com.example.expenseTracker.di
 
 import android.content.Context
-import com.example.expenseTracker.data.services.CatsService
+import com.example.expenseTracker.data.preference.EncryptedPreferenceManager
+import com.example.expenseTracker.data.services.UserService
 import com.example.expenseTracker.network.interceptor.HeaderInterceptor
 import com.example.expenseTracker.network.interceptor.NetworkConnectionInterceptor
 import com.example.expenseTracker.utils.Constants
@@ -28,13 +29,14 @@ object ServiceModule {
     @Singleton
     fun provideOkHttpClient(
         @ApplicationContext context: Context,
+        encryptedPreferenceManager: EncryptedPreferenceManager
     ): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
 
         return OkHttpClient
             .Builder()
-            .addInterceptor(HeaderInterceptor())
+            .addInterceptor(HeaderInterceptor(encryptedPreferenceManager))
             .addInterceptor(NetworkConnectionInterceptor(context))
             .addInterceptor(loggingInterceptor)
             .writeTimeout(60, TimeUnit.SECONDS)
@@ -47,6 +49,7 @@ object ServiceModule {
     @Provides
     fun provideCustomRetrofit(
         @ApplicationContext context: Context,
+        encryptedPreferenceManager: EncryptedPreferenceManager
     ): Retrofit {
         val url = Constants.BASE_URL
 
@@ -60,7 +63,11 @@ object ServiceModule {
                     retrofit: Retrofit,
                 ): Converter<ResponseBody, Any?> {
                     val nextResponseBodyConverter =
-                        retrofit.nextResponseBodyConverter<Any?>(converterFactory(), type, annotations)
+                        retrofit.nextResponseBodyConverter<Any?>(
+                            converterFactory(),
+                            type,
+                            annotations
+                        )
 
                     return Converter { value ->
                         if (value.contentLength() != 0L) nextResponseBodyConverter.convert(value) else null
@@ -74,11 +81,12 @@ object ServiceModule {
             .addConverterFactory(nullOnEmptyConverterFactory)
             .addConverterFactory(GsonConverterFactory.create())
             .baseUrl(url)
-            .client(provideOkHttpClient(context))
+            .client(provideOkHttpClient(context, encryptedPreferenceManager))
             .build()
     }
 
     @Provides
     @Singleton
-    fun provideCatsService(retrofit: Retrofit): CatsService = retrofit.create(CatsService::class.java)
+    fun provideUserService(retrofit: Retrofit): UserService =
+        retrofit.create(UserService::class.java)
 }

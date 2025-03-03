@@ -5,7 +5,7 @@ import com.example.expenseTracker.data.repositories.LanguageRepositoryImpl
 import com.example.expenseTracker.domain.repositories.LanguageRepository
 import com.example.expenseTracker.domain.usecase.LanguageUseCase
 import com.example.expenseTracker.mocks.EncryptPreferenceMock
-import com.example.expenseTracker.presentation.ui.features.chooseLanguages.viewModel.LanguageViewModel
+import com.example.expenseTracker.presentation.features.chooseLanguages.viewModel.LanguageViewModel
 import com.example.expenseTracker.utils.LocaleHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

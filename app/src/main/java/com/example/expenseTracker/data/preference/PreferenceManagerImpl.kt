@@ -16,4 +16,12 @@ class EncryptedPreferenceManagerImpl @Inject constructor(@ApplicationContext con
     override fun setLanguage(lang: String) {
         encryptedPrefs.edit().putString("language", lang).apply()
     }
+
+    override fun setToken(token: String) {
+        encryptedPrefs.edit().putString("token", token).apply()
+    }
+
+    override fun getToken(): String {
+        return encryptedPrefs.getString("token", "") ?: ""
+    }
 }

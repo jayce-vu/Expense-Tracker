@@ -52,8 +52,8 @@ import com.example.expenseTracker.utils.extensions.navigateAndReplace
 fun LoginScreen(navController: NavController) {
     val color = MaterialTheme.colorScheme
     val style = MaterialTheme.typography
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("vucaoit@gmail.com") }
+    var password by remember { mutableStateOf("123456") }
     val viewModel = hiltViewModel<LoginViewModel>()
     val state by viewModel.state.collectAsState()
 

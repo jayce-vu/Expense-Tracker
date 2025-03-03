@@ -1,9 +1,9 @@
-package com.example.expenseTracker.presentation.features.login.viewModel
+package com.example.expenseTracker.presentation.features.signup.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.expenseTracker.data.NetworkResult
-import com.example.expenseTracker.domain.usecase.users.UserLoginUseCase
+import com.example.expenseTracker.domain.usecase.users.UserSignUpUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,31 +12,37 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(private val userUseCase: UserLoginUseCase): ViewModel() {
+class SignUpViewModel @Inject constructor(private val userUseCase: UserSignUpUseCase): ViewModel() {
 
-    private val _state = MutableStateFlow<LoginState>( LoginInitState)
-    val state: StateFlow<LoginState> = _state
+    private val _state = MutableStateFlow<SignUpState>( SignUpInitState)
+    val state: StateFlow<SignUpState> = _state
 
-    fun login(email: String, password: String){
+    fun signup(email: String, name: String, password: String, verifyPassword: String){
         _state.update {
-            LoginLoadingState
+            SignUpLoadingState
+        }
+        if(password != verifyPassword){
+            _state.update {
+                SignUpErrorState(error= "Password does not match")
+            }
+            return
         }
         viewModelScope.launch {
-            userUseCase.execute(email, password).let{ response ->
+            userUseCase.execute(email, password, name).let{ response ->
                 when (response){
                     is NetworkResult.Success -> {
                         _state.update {
-                            LoginSuccessState
+                            SignUpSuccessState
                         }
                     }
                     is NetworkResult.Error -> {
                         _state.update {
-                            LoginErrorState(error= response.message)
+                            SignUpErrorState(error= response.message)
                         }
                     }
                     is NetworkResult.Loading -> {
                         _state.update {
-                            LoginLoadingState
+                            SignUpLoadingState
                         }
                     }
                 }

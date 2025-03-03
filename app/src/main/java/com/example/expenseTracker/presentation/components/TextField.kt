@@ -1,5 +1,6 @@
 package com.example.expenseTracker.presentation.components
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -26,14 +27,17 @@ fun AppOutlinedTextField(
     modifier: Modifier = Modifier,
     keyboardType: KeyboardType = KeyboardType.Text,
     visualTransformation: VisualTransformation = VisualTransformation.None,
-    isError: Boolean = false,
-    errorMessage: String? = null
+    regex: Regex? = null, // Optional validation regex
+    errorMessage: String? = null // Custom error message
 ) {
+    val isError = regex != null && value.isNotEmpty() && !regex.matches(value)
+    val displayErrorMessage = if (isError) errorMessage else null
+
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
         label = { Text(text = label, style = TextStyle(color = Color.Gray, fontSize = 14.sp)) },
-        modifier = modifier.fillMaxWidth().padding(top = if (isError && errorMessage != null) 0.dp else 8.dp),
+        modifier = modifier.fillMaxWidth().padding(top = if (isError) 0.dp else 8.dp),
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType, imeAction = ImeAction.Done),
         visualTransformation = visualTransformation,
         isError = isError,
@@ -42,10 +46,8 @@ fun AppOutlinedTextField(
             focusedContainerColor = Color.White,
             unfocusedContainerColor = Color.White
         ),
-        supportingText = if (isError && errorMessage != null) {
-            { Text(text = errorMessage, color = Color.Red) }
-        } else {
-            null
+        supportingText = displayErrorMessage?.let {
+            { Text(text = it, color = Color.Red) }
         }
     )
 }

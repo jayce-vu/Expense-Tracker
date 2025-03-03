@@ -23,3 +23,7 @@ object Routes {
     const val ADD_EXPENSE_SCREEN = "add_expense_screen"
     const val TRANSACTION_HISTORY_SCREEN = "transaction_history_screen"
 }
+
+object RegEx {
+    const val EMAIL = "^[a-zA-Z0-9!#\$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#\$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,}$"
+}

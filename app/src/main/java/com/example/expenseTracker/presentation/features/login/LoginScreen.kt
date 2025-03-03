@@ -45,6 +45,7 @@ import com.example.expenseTracker.presentation.features.login.viewModel.LoginVie
 import com.example.expenseTracker.presentation.layouts.BaseScreen
 import com.example.expenseTracker.presentation.navigation.NavigationScreens
 import com.example.expenseTracker.presentation.theme.White
+import com.example.expenseTracker.utils.RegEx
 import com.example.expenseTracker.utils.extensions.navigateAndReplace
 
 @Composable
@@ -108,8 +109,10 @@ fun LoginScreen(navController: NavController) {
                             // Email Field
                             AppOutlinedTextField(
                                 value = email,
+                                errorMessage = "Email is not valid",
                                 onValueChange = { email = it },
                                 label = "Email",
+                                regex = Regex(RegEx.EMAIL),
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(vertical = 8.dp),

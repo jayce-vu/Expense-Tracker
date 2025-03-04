@@ -12,7 +12,11 @@ This project is a simple Expense Tracker API built using Express.js and SQLite.
    ```sh
    npm install
    ```
-2. Run the API server:
+2. Generate database file
+   ```sh
+   sqlite3 database.db < schema.sql
+   ```
+3. Run the API server:
    ```sh
    node app.js
    ```

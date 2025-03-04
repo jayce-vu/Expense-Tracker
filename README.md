@@ -26,12 +26,15 @@ The app follows **Clean Architecture** and **MVVM** to ensure modularity and mai
 - **Dependency Injection**: Hilt
 - **Local Storage**: Room Database (SQLite)
 - **Network Requests**: Retrofit
+- **Backend Server**: ExpressJS
+- **Database**: SQLite (server-side)
 
 ## 🛠 Setup & Installation
 ### Prerequisites
 - Android Studio Flamingo or later
 - JDK 17+
 - Gradle 8+
+- Node.js 16+
 
 ### Steps
 1. Clone the repository:
@@ -42,6 +45,20 @@ The app follows **Clean Architecture** and **MVVM** to ensure modularity and mai
 2. Open the project in **Android Studio**.
 3. Sync Gradle and install dependencies.
 4. Run the app on an emulator or physical device.
+
+### Backend Setup
+1. Navigate to the `server` directory:
+   ```bash
+   cd server
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the server:
+   ```bash
+   node app.js
+   ```
 
 ## ✅ Testing & CI/CD
 - **Unit Testing**: Implemented using JUnit + Mockk.
@@ -54,5 +71,5 @@ The app follows **Clean Architecture** and **MVVM** to ensure modularity and mai
 - Integrate **cloud sync** for cross-device access.
 
 ## Design
-Figma Link: [Income & Expense Tracker App](https://www.figma.com/design/IJtQYdPm2PQKRm103G9cgv/Income-%26-Expense-Tracker-App-(Community)-(Copy)?node-id=0-1&t=DgN7UoITdaIcrEvb-1)
+Figma Link: [Income & Expense Tracker App]([https://www.figma.com/design/IJtQYdPm2PQKRm103G9cgv/Income-%26-Expense-Tracker-App-(Community)-(Copy)?node-id=0-1&t=DgN7UoITdaIcrEvb-1](https://www.figma.com/design/IJtQYdPm2PQKRm103G9cgv/Income-%26-Expense-Tracker-App?node-id=0-1&t=1fWEn955ATXg8gsx-1)
 

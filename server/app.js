@@ -2,12 +2,19 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const sqlite3 = require("sqlite3").verbose();
+const multer = require("multer");
 const baseResponse = require("./utils/baseResponse");
 require("dotenv").config();
 
 const SECRET_KEY = process.env.SECRET_KEY || "mydefaultsecret";
 const app = express();
 app.use(express.json());
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, "uploads/"),
+  filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname),
+});
+const upload = multer({ storage });
 
 // Connect to SQLite Database
 const db = new sqlite3.Database("./database.db", sqlite3.OPEN_READWRITE, (err) => {
@@ -40,6 +47,14 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
+
+
+// ░█████╗░██╗░░░██╗████████╗██╗░░██╗███████╗███╗░░██╗  ░█████╗░██████╗░██╗
+// ██╔══██╗██║░░░██║╚══██╔══╝██║░░██║██╔════╝████╗░██║  ██╔══██╗██╔══██╗██║
+// ███████║██║░░░██║░░░██║░░░███████║█████╗░░██╔██╗██║  ███████║██████╔╝██║
+// ██╔══██║██║░░░██║░░░██║░░░██╔══██║██╔══╝░░██║╚████║  ██╔══██║██╔═══╝░██║
+// ██║░░██║╚██████╔╝░░░██║░░░██║░░██║███████╗██║░╚███║  ██║░░██║██║░░░░░██║
+// ╚═╝░░╚═╝░╚═════╝░░░░╚═╝░░░╚═╝░░╚═╝╚══════╝╚═╝░░╚══╝  ╚═╝░░╚═╝╚═╝░░░░░╚═╝
 
 // **Sign-Up Route**
 app.post("/signup", (req, res) => {
@@ -106,6 +121,7 @@ app.post("/login", (req, res) => {
 // **Profile Route**
 app.get("/profile", authenticateToken, (req, res) => {
   const userId = req.user.id;
+  console.log("PROFILE  -->", userId)
 
   db.get("SELECT id, email, name FROM users WHERE id = ?", [userId], (err, user) => {
     if (err) return res.status(500).json(baseResponse("error", "Database error", null, err.message));
@@ -130,6 +146,97 @@ app.post("/logout", authenticateToken, (req, res) => {
     }
 
     res.json(baseResponse("success", "Logged out successfully"));
+});
+
+// ███████╗██╗░░██╗██████╗░███████╗███╗░░██╗░██████╗███████╗  ░█████╗░██████╗░██╗
+// ██╔════╝╚██╗██╔╝██╔══██╗██╔════╝████╗░██║██╔════╝██╔════╝  ██╔══██╗██╔══██╗██║
+// █████╗░░░╚███╔╝░██████╔╝█████╗░░██╔██╗██║╚█████╗░█████╗░░  ███████║██████╔╝██║
+// ██╔══╝░░░██╔██╗░██╔═══╝░██╔══╝░░██║╚████║░╚═══██╗██╔══╝░░  ██╔══██║██╔═══╝░██║
+// ███████╗██╔╝╚██╗██║░░░░░███████╗██║░╚███║██████╔╝███████╗  ██║░░██║██║░░░░░██║
+// ╚══════╝╚═╝░░╚═╝╚═╝░░░░░╚══════╝╚═╝░░╚══╝╚═════╝░╚══════╝  ╚═╝░░╚═╝╚═╝░░░░░╚═╝
+
+// **1. Create Expense**
+app.post("/expenses", authenticateToken, upload.array("invoices"), (req, res) => {
+  const userId = req.user.id;
+  console.log("Create EXPENSE  -->", userId, req.body);
+  const { categoryId, amount, description } = req.body;
+  const invoiceFiles = req.files.map(file => file.path); // File paths
+
+  const sql = `INSERT INTO expenses (userId, categoryId, amount, description, receiptUrl) VALUES (?, ?, ?, ?, ?)`;
+  db.run(sql, [userId, categoryId, amount, description, invoiceFiles.join("|")], function (err) {
+    if (err) {
+      return res.status(200).json(baseResponse('error', "Failed to create expense", null, err.message));
+    }
+    res.json(baseResponse('success', "Expense added successfully", { id: this.lastID }));
+  });
+});
+
+// **2. Read All Expenses**
+app.get("/expenses", authenticateToken, (req, res) => {
+  const userId = req.user.id;
+  console.log("GET ALL EXPENSE  -->", userId);
+
+  db.all("SELECT e.id, e.categoryId, c.name AS categoryName, e.amount, e.date FROM expenses e JOIN categories c ON e.categoryId = c.id WHERE userId = ?", [userId], (err, rows) => {
+    if (err) {
+      return res.status(200).json(baseResponse('error', "Failed to fetch expenses", null, err.message));
+    }
+    res.json(baseResponse('success', "Expenses retrieved successfully", rows));
+  });
+});
+
+// **3. Read Single Expense**
+app.get("/expenses/:id", authenticateToken, (req, res) => {
+  const userId = req.user.id;
+  const expenseId = req.params.id;
+  console.log("GET EXPENSE by ID  -->", expenseId);
+
+  db.get("SELECT e.id, e.categoryId, c.name AS categoryName, e.amount, e.date FROM expenses e JOIN categories c ON e.categoryId = c.id WHERE e.id = ? AND userId = ?", [expenseId, userId], (err, row) => {
+    if (err) {
+      return res.status(200).json(baseResponse('error', "Failed to fetch expense", null, err.message));
+    }
+    if (!row) {
+      return res.status(200).json(baseResponse('error', "Expense not found"));
+    }
+    res.json(baseResponse('success', "Expense retrieved successfully", row));
+  });
+});
+
+// **4. Update Expense**
+app.put("/expenses/:id", authenticateToken, upload.array("invoices"), (req, res) => {
+  const userId = req.user.id;
+  const id = req.params.id;
+  const { categoryId, amount, date, description } = req.body;
+  const invoiceFiles = req.files.map(file => file.path); // File paths
+  console.log("UPDATE EXPENSE by ID  -->", id);
+
+  const sql = `UPDATE expenses SET categoryId = ?, amount = ?, date = ?, description = ?, receiptUrl = ? WHERE id = ? AND userId = ?`;
+
+  db.run(sql, [categoryId, amount, date, description, invoiceFiles.join("|"), id, userId], function (err) {
+    if (err) {
+      return res.status(200).json(baseResponse('error', "Failed to update expense", null, err.message));
+    }
+    if (this.changes === 0) {
+      return res.status(200).json(baseResponse('error', "Expense not found or no permission to update"));
+    }
+    res.json(baseResponse('success', "Expense updated successfully"));
+  });
+});
+
+// **5. Delete Expense**
+app.delete("/expenses/:id", authenticateToken, (req, res) => {
+  const userId = req.user.id;
+  const id = req.params.id;
+  console.log("DELETE EXPENSE by ID  -->", id);
+
+  db.run("DELETE FROM expenses WHERE id = ? AND userId = ?", [id, userId], function (err) {
+    if (err) {
+      return res.status(200).json(baseResponse('error', "Failed to delete expense", null, err.message));
+    }
+    if (this.changes === 0) {
+      return res.status(200).json(baseResponse('error', "Expense not found or no permission to delete"));
+    }
+    res.json(baseResponse('success', "Expense deleted successfully"));
+  });
 });
 
 // **Start Server**

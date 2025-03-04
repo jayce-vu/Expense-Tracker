@@ -1,4 +1,4 @@
-package com.example.expenseTracker.presentation.components
+package com.example.expenseTracker.presentation.components.buttons
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons

@@ -14,12 +14,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
+import com.example.expenseTracker.presentation.components.AppBarBackground
 import com.example.expenseTracker.presentation.components.CommonAppBar
 
 @Composable
 fun BaseScreen(
     modifier: Modifier = Modifier,
     title: String = "",
+    showBackground: Boolean = true,
     showBackButton: Boolean = true,
     onBackPress: () -> Unit = {},
     disablePadding: Boolean = false,
@@ -32,31 +34,27 @@ fun BaseScreen(
     val color = MaterialTheme.colorScheme
     Scaffold(
         containerColor = color.background,
-        topBar = {
-            if (showAppBar)
-                CommonAppBar(
-                    title = title,
-                    navigationIcon = navigationIcon ?: {
-                        if (showBackButton) {
-                            IconButton({
-                                navController.popBackStack()
-                                onBackPress.invoke()
-                            }) {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                                    contentDescription = "asd",
-                                    tint = color.onBackground
-                                )
-                            }
-                        }
-                    },
-                    actions = actions
-                )
-        }
     ) { paddingValues ->
         val baseScreenModifier = Modifier
         if (!disablePadding) {
             modifier.padding(paddingValues)
+        }
+        Box {
+            if (showBackground) {
+                AppBarBackground()
+            }
+            if (showAppBar) {
+                CommonAppBar(
+                    showBackButton = showBackButton,
+                    title = title,
+                    onNavigationIconClick = {
+                        navController.popBackStack()
+                        onBackPress.invoke()
+                    },
+                    navigationIcon = navigationIcon,
+                    actions = actions
+                )
+            }
         }
         Box(modifier = baseScreenModifier, contentAlignment = Alignment.TopCenter) {
             content(paddingValues)

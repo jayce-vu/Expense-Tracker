@@ -1,6 +1,5 @@
 package com.example.expenseTracker.presentation.features.login
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,7 +25,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,10 +32,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.expenseTracker.R
-import com.example.expenseTracker.presentation.components.AppButton
+import com.example.expenseTracker.presentation.components.AppBarBackground
+import com.example.expenseTracker.presentation.components.buttons.AppButton
 import com.example.expenseTracker.presentation.components.AppOutlinedTextField
-import com.example.expenseTracker.presentation.components.GoogleSignInButton
+import com.example.expenseTracker.presentation.components.buttons.GoogleSignInButton
 import com.example.expenseTracker.presentation.features.authentication.viewModel.AuthenticatingState
 import com.example.expenseTracker.presentation.features.authentication.viewModel.AuthenticationViewModel
 import com.example.expenseTracker.presentation.features.authentication.viewModel.LoggedInState
@@ -67,10 +65,6 @@ fun LoginScreen(navController: NavController) {
         disablePadding = true,
         navController = navController
     ) {
-        Image(
-            painter = painterResource(R.drawable.app_bar_background),
-            "Image background"
-        )
         Box(
             modifier = Modifier
                 .padding(top = 150.dp)

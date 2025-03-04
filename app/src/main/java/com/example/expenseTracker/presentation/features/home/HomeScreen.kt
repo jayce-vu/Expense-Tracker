@@ -1,7 +1,6 @@
-package com.example.expenseTracker.presentation.features.home.view
+package com.example.expenseTracker.presentation.features.home
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,12 +33,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.expenseTracker.R
 import com.example.expenseTracker.presentation.features.home.viewModel.HomeViewModel
 import com.example.expenseTracker.presentation.layouts.BaseScreen
 import com.example.expenseTracker.presentation.navigation.NavigationScreens
@@ -58,10 +55,6 @@ fun HomeScreen(navController: NavController) {
         disablePadding = true,
         navController = navController
     ) {
-        Image(
-            painter = painterResource(R.drawable.app_bar_background),
-            "Image background"
-        )
         Box(
             modifier = Modifier
                 .padding(top = 150.dp)

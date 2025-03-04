@@ -1,4 +1,4 @@
-package com.example.expenseTracker.presentation.components
+package com.example.expenseTracker.presentation.components.buttons
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height

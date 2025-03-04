@@ -1,6 +1,5 @@
 package com.example.expenseTracker.presentation.features.profile
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,12 +18,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.expenseTracker.R
+import com.example.expenseTracker.presentation.components.AppBarBackground
 import com.example.expenseTracker.presentation.components.CircleAvatar
 import com.example.expenseTracker.presentation.features.authentication.viewModel.AuthenticationViewModel
 import com.example.expenseTracker.presentation.features.profile.components.AppMenu
@@ -43,10 +41,6 @@ fun ProfileScreen(navController: NavController) {
         disablePadding = true,
         navController = navController
     ) {
-        Image(
-            painter = painterResource(R.drawable.app_bar_background),
-            "Image background"
-        )
         Box(
             modifier = Modifier
                 .padding(top = 200.dp)

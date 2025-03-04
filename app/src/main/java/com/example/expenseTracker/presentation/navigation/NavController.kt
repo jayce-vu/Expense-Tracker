@@ -11,7 +11,7 @@ import androidx.navigation.compose.composable
 import com.example.expenseTracker.presentation.features.addExpense.AddExpenseScreen
 import com.example.expenseTracker.presentation.features.authentication.viewModel.AuthenticationViewModel
 import com.example.expenseTracker.presentation.features.getStarted.GetStartedScreen
-import com.example.expenseTracker.presentation.features.home.view.HomeScreen
+import com.example.expenseTracker.presentation.features.home.HomeScreen
 import com.example.expenseTracker.presentation.features.login.LoginScreen
 import com.example.expenseTracker.presentation.features.profile.ProfileScreen
 import com.example.expenseTracker.presentation.features.signup.SignUpScreen

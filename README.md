@@ -71,5 +71,5 @@ The app follows **Clean Architecture** and **MVVM** to ensure modularity and mai
 - Integrate **cloud sync** for cross-device access.
 
 ## Design
-Figma Link: [Income & Expense Tracker App]([https://www.figma.com/design/IJtQYdPm2PQKRm103G9cgv/Income-%26-Expense-Tracker-App-(Community)-(Copy)?node-id=0-1&t=DgN7UoITdaIcrEvb-1](https://www.figma.com/design/IJtQYdPm2PQKRm103G9cgv/Income-%26-Expense-Tracker-App?node-id=0-1&t=1fWEn955ATXg8gsx-1))
+Figma Link: [Income & Expense Tracker App](https://www.figma.com/design/IJtQYdPm2PQKRm103G9cgv/Income-%26-Expense-Tracker-App?node-id=0-1&t=1fWEn955ATXg8gsx-1)
 

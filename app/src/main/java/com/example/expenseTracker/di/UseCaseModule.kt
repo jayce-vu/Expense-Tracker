@@ -1,6 +1,8 @@
 package com.example.expenseTracker.di
 
+import com.example.expenseTracker.domain.repositories.ExpenseRepository
 import com.example.expenseTracker.domain.repositories.UserRepository
+import com.example.expenseTracker.domain.usecase.expenses.AddExpenseUseCase
 import com.example.expenseTracker.domain.usecase.users.UserInfoUseCase
 import com.example.expenseTracker.domain.usecase.users.UserLoginUseCase
 import com.example.expenseTracker.domain.usecase.users.UserLogoutUseCase
@@ -13,15 +15,26 @@ import dagger.hilt.android.components.ViewModelComponent
 @Module
 @InstallIn(ViewModelComponent::class)
 object UseCaseModule {
+
+    // User use case
     @Provides
-    fun provideUserLoginUseCase(userRepository: UserRepository): UserLoginUseCase = UserLoginUseCase(userRepository)
+    fun provideUserLoginUseCase(userRepository: UserRepository): UserLoginUseCase =
+        UserLoginUseCase(userRepository)
 
     @Provides
-    fun provideSignUpUseCase(userRepository: UserRepository): UserSignUpUseCase = UserSignUpUseCase(userRepository)
+    fun provideSignUpUseCase(userRepository: UserRepository): UserSignUpUseCase =
+        UserSignUpUseCase(userRepository)
 
     @Provides
-    fun provideGetUserUseCase(userRepository: UserRepository): UserInfoUseCase = UserInfoUseCase(userRepository)
+    fun provideGetUserUseCase(userRepository: UserRepository): UserInfoUseCase =
+        UserInfoUseCase(userRepository)
 
     @Provides
-    fun provideLogoutUseCase(userRepository: UserRepository): UserLogoutUseCase = UserLogoutUseCase(userRepository)
+    fun provideLogoutUseCase(userRepository: UserRepository): UserLogoutUseCase =
+        UserLogoutUseCase(userRepository)
+
+    // expense use case
+    @Provides
+    fun provideAddExpenseUseCase(expenseRepository: ExpenseRepository): AddExpenseUseCase =
+        AddExpenseUseCase(expenseRepository)
 }

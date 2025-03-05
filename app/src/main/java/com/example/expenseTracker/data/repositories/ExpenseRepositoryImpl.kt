@@ -11,6 +11,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import javax.inject.Inject
 
 class ExpenseRepositoryImpl @Inject constructor(private val expenseService: ExpenseService) :
@@ -37,10 +38,10 @@ class ExpenseRepositoryImpl @Inject constructor(private val expenseService: Expe
         }
 
         val response = expenseService.createExpense(
-            categoryId = postExpense.categoryId,
-            amount = postExpense.amount,
-            description = postExpense.description,
-            date = postExpense.date,
+            categoryId = createPartFromString(postExpense.categoryId),
+            amount = createPartFromString(postExpense.amount.toString()),
+            description = createPartFromString(postExpense.description),
+            date = createPartFromString(postExpense.date),
             invoices = invoiceParts
         )
         if (response.isSuccessful) {
@@ -82,10 +83,10 @@ class ExpenseRepositoryImpl @Inject constructor(private val expenseService: Expe
 
         val response = expenseService.updateExpense(
             id = id,
-            categoryId = expenseUpdateRequest.categoryId,
-            amount = expenseUpdateRequest.amount,
-            description = expenseUpdateRequest.description,
-            date = expenseUpdateRequest.date,
+            categoryId = createPartFromString(expenseUpdateRequest.categoryId),
+            amount = createPartFromString(expenseUpdateRequest.amount.toString()),
+            description = createPartFromString(expenseUpdateRequest.description),
+            date = createPartFromString(expenseUpdateRequest.date),
             invoices = invoiceParts
         )
         if (response.isSuccessful) {
@@ -114,5 +115,9 @@ class ExpenseRepositoryImpl @Inject constructor(private val expenseService: Expe
             }
         }
         return (NetworkResult.Error(response.errorBody().toString()))
+    }
+
+    private fun createPartFromString(value: String): RequestBody {
+        return value.toRequestBody("text/plain".toMediaTypeOrNull())
     }
 }

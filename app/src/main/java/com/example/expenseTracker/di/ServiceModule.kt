@@ -1,6 +1,7 @@
 package com.example.expenseTracker.di
 
 import android.content.Context
+import com.example.expenseTracker.data.services.ExpenseService
 import com.example.expenseTracker.data.services.UserService
 import com.example.expenseTracker.network.SessionManager
 import com.example.expenseTracker.network.interceptor.HeaderInterceptor
@@ -89,4 +90,8 @@ object ServiceModule {
     @Singleton
     fun provideUserService(retrofit: Retrofit): UserService =
         retrofit.create(UserService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideExpenseService(retrofit: Retrofit): ExpenseService = retrofit.create(ExpenseService::class.java)
 }

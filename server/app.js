@@ -2,12 +2,14 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const sqlite3 = require("sqlite3").verbose();
+const path = require('path');
 const multer = require("multer");
 const baseResponse = require("./utils/baseResponse");
 require("dotenv").config();
 
 const SECRET_KEY = process.env.SECRET_KEY || "mydefaultsecret";
 const app = express();
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
 
 const storage = multer.diskStorage({
@@ -112,7 +114,7 @@ app.post("/login", (req, res) => {
     }
 
     // Generate JWT
-    const token = jwt.sign({ id: user.id, email: user.email }, SECRET_KEY, { expiresIn: "1h" });
+    const token = jwt.sign({ id: user.id, email: user.email }, SECRET_KEY, { expiresIn: "24h" });
 
     res.json(baseResponse("success", "Login successful", { user: { id: user.id, email: user.email, name: user.name }, token }));
   });
@@ -190,7 +192,7 @@ app.get("/expenses/:id", authenticateToken, (req, res) => {
   const expenseId = req.params.id;
   console.log("GET EXPENSE by ID  -->", expenseId);
 
-  db.get("SELECT e.id, e.categoryId, c.name AS categoryName, e.amount, e.date FROM expenses e JOIN categories c ON e.categoryId = c.id WHERE e.id = ? AND userId = ?", [expenseId, userId], (err, row) => {
+  db.get("SELECT e.id, e.categoryId, c.name AS categoryName, e.amount, e.date, e.description, e.receiptUrl FROM expenses e JOIN categories c ON e.categoryId = c.id WHERE e.id = ? AND userId = ?", [expenseId, userId], (err, row) => {
     if (err) {
       return res.status(200).json(baseResponse('error', "Failed to fetch expense", null, err.message));
     }

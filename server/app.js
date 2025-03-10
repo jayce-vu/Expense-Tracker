@@ -51,12 +51,12 @@ const authenticateToken = (req, res, next) => {
 
 
 
-// ░█████╗░██╗░░░██╗████████╗██╗░░██╗███████╗███╗░░██╗  ░█████╗░██████╗░██╗
-// ██╔══██╗██║░░░██║╚══██╔══╝██║░░██║██╔════╝████╗░██║  ██╔══██╗██╔══██╗██║
-// ███████║██║░░░██║░░░██║░░░███████║█████╗░░██╔██╗██║  ███████║██████╔╝██║
-// ██╔══██║██║░░░██║░░░██║░░░██╔══██║██╔══╝░░██║╚████║  ██╔══██║██╔═══╝░██║
-// ██║░░██║╚██████╔╝░░░██║░░░██║░░██║███████╗██║░╚███║  ██║░░██║██║░░░░░██║
-// ╚═╝░░╚═╝░╚═════╝░░░░╚═╝░░░╚═╝░░╚═╝╚══════╝╚═╝░░╚══╝  ╚═╝░░╚═╝╚═╝░░░░░╚═╝
+//  █████╗ ██╗   ██╗████████╗██╗  ██╗███████╗███╗  ██╗   █████╗ ██████╗ ██╗
+// ██╔══██╗██║   ██║╚══██╔══╝██║  ██║██╔════╝████╗ ██║  ██╔══██╗██╔══██╗██║
+// ███████║██║   ██║   ██║   ███████║█████╗  ██╔██╗██║  ███████║██████╔╝██║
+// ██╔══██║██║   ██║   ██║   ██╔══██║██╔══╝  ██║╚████║  ██╔══██║██╔═══╝ ██║
+// ██║  ██║╚██████╔╝   ██║   ██║  ██║███████╗██║ ╚███║  ██║  ██║██║     ██║
+// ╚═╝  ╚═╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚══╝  ╚═╝  ╚═╝╚═╝     ╚═╝
 
 // **Sign-Up Route**
 app.post("/signup", (req, res) => {
@@ -150,26 +150,26 @@ app.post("/logout", authenticateToken, (req, res) => {
     res.json(baseResponse("success", "Logged out successfully"));
 });
 
-// ███████╗██╗░░██╗██████╗░███████╗███╗░░██╗░██████╗███████╗  ░█████╗░██████╗░██╗
-// ██╔════╝╚██╗██╔╝██╔══██╗██╔════╝████╗░██║██╔════╝██╔════╝  ██╔══██╗██╔══██╗██║
-// █████╗░░░╚███╔╝░██████╔╝█████╗░░██╔██╗██║╚█████╗░█████╗░░  ███████║██████╔╝██║
-// ██╔══╝░░░██╔██╗░██╔═══╝░██╔══╝░░██║╚████║░╚═══██╗██╔══╝░░  ██╔══██║██╔═══╝░██║
-// ███████╗██╔╝╚██╗██║░░░░░███████╗██║░╚███║██████╔╝███████╗  ██║░░██║██║░░░░░██║
-// ╚══════╝╚═╝░░╚═╝╚═╝░░░░░╚══════╝╚═╝░░╚══╝╚═════╝░╚══════╝  ╚═╝░░╚═╝╚═╝░░░░░╚═╝
+// ███████╗██╗  ██╗██████╗ ███████╗███╗  ██╗ ██████╗███████╗   █████╗ ██████╗ ██╗
+// ██╔════╝╚██╗██╔╝██╔══██╗██╔════╝████╗ ██║██╔════╝██╔════╝  ██╔══██╗██╔══██╗██║
+// █████╗   ╚███╔╝ ██████╔╝█████╗  ██╔██╗██║╚█████╗ █████╗    ███████║██████╔╝██║
+// ██╔══╝   ██╔██╗ ██╔═══╝ ██╔══╝  ██║╚████║ ╚═══██╗██╔══╝    ██╔══██║██╔═══╝ ██║
+// ███████╗██╔╝╚██╗██║     ███████╗██║ ╚███║██████╔╝███████╗  ██║  ██║██║     ██║
+// ╚══════╝╚═╝  ╚═╝╚═╝     ╚══════╝╚═╝  ╚══╝╚═════╝ ╚══════╝  ╚═╝  ╚═╝╚═╝     ╚═╝
 
 // **1. Create Expense**
 app.post("/expenses", authenticateToken, upload.array("invoices"), (req, res) => {
   const userId = req.user.id;
   console.log("Create EXPENSE  -->", userId, req.body);
-  const { categoryId, amount, description } = req.body;
-  const invoiceFiles = req.files.map(file => file.path); // File paths
+  const { categoryId, amount, description, date, categoryName, isIncome } = req.body;
+  const invoiceFiles = req.files.map(file => file.path).join("|"); // File paths
 
-  const sql = `INSERT INTO expenses (userId, categoryId, amount, description, receiptUrl) VALUES (?, ?, ?, ?, ?)`;
-  db.run(sql, [userId, categoryId, amount, description, invoiceFiles.join("|")], function (err) {
+  const sql = `INSERT INTO expenses (userId, categoryId, amount, description, receiptUrl, date, isIncome) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+  db.run(sql, [userId, categoryId, amount, description, invoiceFiles, date, isIncome], function (err) {
     if (err) {
       return res.status(200).json(baseResponse('error', "Failed to create expense", null, err.message));
     }
-    res.json(baseResponse('success', "Expense added successfully", { id: this.lastID }));
+    res.json(baseResponse('success', "Expense added successfully", { id: this.lastID, categoryId, categoryName, amount, isIncome, date, description, receiptUrl: invoiceFiles }));
   });
 });
 
@@ -178,7 +178,7 @@ app.get("/expenses", authenticateToken, (req, res) => {
   const userId = req.user.id;
   console.log("GET ALL EXPENSE  -->", userId);
 
-  db.all("SELECT e.id, e.categoryId, c.name AS categoryName, e.amount, e.date FROM expenses e JOIN categories c ON e.categoryId = c.id WHERE userId = ?", [userId], (err, rows) => {
+  db.all("SELECT e.id, e.categoryId, c.name AS categoryName, e.amount, e.isIncome, e.date, e.description FROM expenses e JOIN categories c ON e.categoryId = c.id WHERE userId = ?", [userId], (err, rows) => {
     if (err) {
       return res.status(200).json(baseResponse('error', "Failed to fetch expenses", null, err.message));
     }
@@ -192,7 +192,7 @@ app.get("/expenses/:id", authenticateToken, (req, res) => {
   const expenseId = req.params.id;
   console.log("GET EXPENSE by ID  -->", expenseId);
 
-  db.get("SELECT e.id, e.categoryId, c.name AS categoryName, e.amount, e.date, e.description, e.receiptUrl FROM expenses e JOIN categories c ON e.categoryId = c.id WHERE e.id = ? AND userId = ?", [expenseId, userId], (err, row) => {
+  db.get("SELECT e.id, e.categoryId, c.name AS categoryName, e.amount, e.isIncome, e.date, e.description, e.receiptUrl FROM expenses e JOIN categories c ON e.categoryId = c.id WHERE e.id = ? AND userId = ?", [expenseId, userId], (err, row) => {
     if (err) {
       return res.status(200).json(baseResponse('error', "Failed to fetch expense", null, err.message));
     }
@@ -240,6 +240,103 @@ app.delete("/expenses/:id", authenticateToken, (req, res) => {
     res.json(baseResponse('success', "Expense deleted successfully"));
   });
 });
+
+
+
+//  █████╗  █████╗ ████████╗███████╗ ██████╗  █████╗ ██████╗ ██╗███████╗ ██████╗
+// ██╔══██╗██╔══██╗╚══██╔══╝██╔════╝██╔════╝ ██╔══██╗██╔══██╗██║██╔════╝██╔════╝
+// ██║  ╚═╝███████║   ██║   █████╗  ██║  ██╗ ██║  ██║██████╔╝██║█████╗  ╚█████╗ 
+// ██║  ██╗██╔══██║   ██║   ██╔══╝  ██║  ╚██╗██║  ██║██╔══██╗██║██╔══╝   ╚═══██╗
+// ╚█████╔╝██║  ██║   ██║   ███████╗╚██████╔╝╚█████╔╝██║  ██║██║███████╗██████╔╝
+//  ╚════╝ ╚═╝  ╚═╝   ╚═╝   ╚══════╝ ╚═════╝  ╚════╝ ╚═╝  ╚═╝╚═╝╚══════╝╚═════╝ 
+
+// Create a new category (POST)
+app.post('/categories', authenticateToken, (req, res) => {
+  const { name, type } = req.body;
+  const own = req.user.id; // User ID from JWT
+
+  if (!name || !type) return res.status(200).json(baseResponse('error', 'Name and type are required'));
+
+  db.run("INSERT INTO categories (name, type, isSystem, own) VALUES (?, ?, 0, ?)", [name, type, own], function (err) {
+      if (err) return res.status(200).json(baseResponse('error', err.message));
+
+      res.status(200).json(baseResponse('success', "create success", { id: this.lastID, name, type, isSystem: 0, own }));
+  });
+});
+
+// Get all categories (GET)
+app.get('/categories', authenticateToken, (req, res) => {
+  const own = req.user.id; // User ID from JWT
+  console.log("Get All Categories  -->", own, req.body);
+
+  db.all("SELECT * FROM categories WHERE isSystem = 1 OR own = ?", [own], (err, rows) => {
+      if (err) return res.status(200).json(baseResponse('error', err.message));
+
+      res.json(baseResponse('success', 'get all categories success', rows));
+  });
+});
+
+// Get categories for the authenticated user (GET)
+app.get('/categories/user', authenticateToken, (req, res) => {
+  db.all("SELECT * FROM categories WHERE own = ? OR isSystem = 1", [req.user.id], (err, rows) => {
+      if (err) return res.status(200).json('error', err.message);
+
+      res.json(baseResponse('success', "success", rows));
+  });
+});
+
+// Get system categories only (GET)
+app.get('/categories/system', authenticateToken, (req, res) => {
+  db.all("SELECT * FROM categories WHERE isSystem = 1", [], (err, rows) => {
+      if (err) return res.status(200).json('error', err.message);
+
+      res.json(baseResponse('success', "success", rows));
+  });
+});
+
+// Get a single category (GET)
+app.get('/categories/:id', authenticateToken, (req, res) => {
+  const { id } = req.params;
+  db.get("SELECT * FROM categories WHERE id = ?", [id], (err, row) => {
+      if (err) return res.status(200).json('error', err.message);
+
+      if (!row) return res.status(200).json('error', 'Category not found');
+
+      res.json(baseResponse('success', "success", row));
+  });
+});
+
+// Update a category (PUT) - Only if user owns it
+app.put('/categories/:id', authenticateToken, (req, res) => {
+  const { id } = req.params;
+  const { name, type } = req.body;
+  const own = req.user.id; // Get user ID from JWT
+
+  if (!name || !type) return res.status(200).json(baseResponse('error', 'Name and type are required'));
+
+  db.run("UPDATE categories SET name = ?, type = ? WHERE id = ? AND own = ? AND isSystem = 0",
+      [name, type, id, own], function (err) {
+          if (err) return res.status(200).json('error', err.message);
+
+          if (this.changes === 0) return res.status(200).json('error', 'Cannot update system categories or others');
+
+          res.json(baseResponse('success', "success", { id, name, type, own }));
+      });
+});
+
+// Delete a category (DELETE) - Only if user owns it
+app.delete('/categories/:id', authenticateToken, (req, res) => {
+  const { id } = req.params;
+  const own = req.user.id; // Get user ID from JWT
+
+  db.run("DELETE FROM categories WHERE id = ? AND own = ? AND isSystem = 0", [id, own], function (err) {
+      if (err) return res.status(200).json('error', err.message);
+      if (this.changes === 0) return res.status(200).json('error', 'Cannot delete system categories or others' );
+
+      res.json(baseResponse('success', 'Category deleted successfully'));
+  });
+});
+
 
 // **Start Server**
 const PORT = process.env.PORT || 3000;

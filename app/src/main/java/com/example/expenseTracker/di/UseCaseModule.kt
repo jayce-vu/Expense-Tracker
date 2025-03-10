@@ -1,7 +1,10 @@
 package com.example.expenseTracker.di
 
+import com.example.expenseTracker.domain.repositories.CategoryRepository
 import com.example.expenseTracker.domain.repositories.ExpenseRepository
 import com.example.expenseTracker.domain.repositories.UserRepository
+import com.example.expenseTracker.domain.usecase.categories.CategoryUseCase
+import com.example.expenseTracker.domain.usecase.categories.ICategoryUseCase
 import com.example.expenseTracker.domain.usecase.expenses.AddExpenseUseCase
 import com.example.expenseTracker.domain.usecase.expenses.AllExpensesUseCase
 import com.example.expenseTracker.domain.usecase.users.UserInfoUseCase
@@ -42,4 +45,7 @@ object UseCaseModule {
     @Provides
     fun provideAllExpenseUseCase(expenseRepository: ExpenseRepository): AllExpensesUseCase =
         AllExpensesUseCase(expenseRepository)
+
+    @Provides
+    fun provideCategoriesUseCase(categoryRepository: CategoryRepository): ICategoryUseCase = CategoryUseCase(categoryRepository)
 }

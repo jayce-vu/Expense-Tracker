@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,6 +27,11 @@ fun AddExpenseScreen(navController: NavController){
     val style = MaterialTheme.typography
     val viewModel = hiltViewModel<AddExpenseViewModel>()
     val state by viewModel.state.collectAsState()
+    val categoriesState by viewModel.categoriesState.collectAsState()
+
+    LaunchedEffect(categoriesState) {  // ✅ Forces recomposition when categoriesState changes
+        println("Categories updated: ${categoriesState.size}")
+    }
 
     LaunchedEffect(state) {
         if(state is AddExpenseSuccessState){
@@ -40,7 +46,7 @@ fun AddExpenseScreen(navController: NavController){
                     style = style.titleMedium.copy(color = Color.Red)
                 )
             }
-            InvoiceForm(state){ data ->
+            InvoiceForm(state, categoriesState){ data ->
                 viewModel.addExpense(data)
             }
         }

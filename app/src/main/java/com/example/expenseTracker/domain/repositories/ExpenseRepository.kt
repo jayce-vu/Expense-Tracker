@@ -4,11 +4,11 @@ import com.example.expenseTracker.data.NetworkResult
 import com.example.expenseTracker.data.services.postModel.ExpenseUpdateRequest
 import com.example.expenseTracker.data.services.postModel.PostExpense
 import com.example.expenseTracker.data.services.responseModels.ExpenseDetailResponse
-import com.example.expenseTracker.data.services.responseModels.ExpenseResponseModel
+import kotlinx.coroutines.flow.StateFlow
 
 interface ExpenseRepository {
 
-    suspend fun getAllExpenses(): NetworkResult<List<ExpenseResponseModel>>
+    suspend fun getAllExpenses(): NetworkResult<List<ExpenseDetailResponse>>
 
     suspend fun createExpense(postExpense: PostExpense): NetworkResult<Boolean>
 
@@ -21,5 +21,5 @@ interface ExpenseRepository {
 
     suspend fun deleteExpense(id: String): NetworkResult<Boolean>
 
-    fun getAllCachedExpenses(): List<ExpenseResponseModel>
+    fun getAllCachedExpenses(): StateFlow<List<ExpenseDetailResponse>>
 }

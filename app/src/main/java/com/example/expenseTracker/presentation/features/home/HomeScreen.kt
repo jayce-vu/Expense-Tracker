@@ -35,11 +35,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.expenseTracker.data.services.responseModels.ExpenseResponseModel
+import com.example.expenseTracker.data.services.responseModels.ExpenseDetailResponse
 import com.example.expenseTracker.presentation.features.home.viewModel.HomeViewModel
 import com.example.expenseTracker.presentation.layouts.BaseScreen
 import com.example.expenseTracker.presentation.navigation.NavigationScreens
@@ -89,7 +90,7 @@ fun HomeScreen(navController: NavController) {
                         Row {
                             Column {
                                 Text("Total balance", style = style.titleLarge)
-                                Text("2000$")
+                                Text("$${state.balance}")
                             }
                         }
                         Row(
@@ -113,7 +114,7 @@ fun HomeScreen(navController: NavController) {
                         }
                     }
                 }
-                TransactionList(expenses,style) {
+                TransactionList(expenses, style) {
                     navController.navigate(NavigationScreens.TransactionHistory.screenRoute)
                 }
             }
@@ -123,31 +124,43 @@ fun HomeScreen(navController: NavController) {
 
 @Composable
 fun TransactionList(
-    expenses: List<ExpenseResponseModel>,
+    expenses: List<ExpenseDetailResponse>,
     style: Typography,
     onSeeAll: () -> Unit
 ) {
-    Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .padding(16.dp)) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Transactions", style = style.titleLarge)
-            TextButton(onClick = onSeeAll) {
-                Text("See all", style = style.titleMedium)
+            if(expenses.isNotEmpty()){
+                TextButton(onClick = onSeeAll) {
+                    Text("See all", style = style.titleMedium)
+                }
+            } else {
+                Box(Modifier)
             }
         }
 
         LazyColumn {
-            items(expenses.size) { index ->
-                ExpenseItem(expenses[index], style)
+            items(expenses.size + 1) { index ->
+                if(index == expenses.size){
+                    // Add space at the end of the list
+                    Box(modifier = Modifier.height(100.dp))
+                } else {
+                    ExpenseItem(expenses[index], style)
+                }
             }
         }
     }
 }
 
 @Composable
-fun ExpenseItem(expense: ExpenseResponseModel, style: Typography) {
+fun ExpenseItem(expense: ExpenseDetailResponse, style: Typography) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -156,6 +169,13 @@ fun ExpenseItem(expense: ExpenseResponseModel, style: Typography) {
     ) {
         Column {
             Text(expense.categoryName, style = style.bodyLarge)
+            Text(
+                expense.description,
+                style = style.bodyMedium,
+                color = Color.Gray,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
             Text(expense.date, style = style.bodyMedium, color = Color.Gray)
         }
         Text("-$${expense.amount}", style = style.bodyLarge, color = Color.Red)
@@ -166,7 +186,7 @@ fun ExpenseItem(expense: ExpenseResponseModel, style: Typography) {
 @Composable
 private fun PreviewTransactionList() {
     Surface(modifier = Modifier.width(300.dp)) {
-        TransactionList(emptyList(),MaterialTheme.typography) {}
+        TransactionList(emptyList(), MaterialTheme.typography) {}
     }
 }
 

@@ -13,6 +13,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.expenseTracker.presentation.components.AppBarBackground
 import com.example.expenseTracker.presentation.components.CommonAppBar
@@ -35,9 +37,9 @@ fun BaseScreen(
     Scaffold(
         containerColor = color.background,
     ) { paddingValues ->
-        val baseScreenModifier = Modifier
+        var baseScreenModifier = modifier
         if (!disablePadding) {
-            modifier.padding(paddingValues)
+            baseScreenModifier = baseScreenModifier.padding(paddingValues)
         }
         Box {
             if (showBackground) {
@@ -52,11 +54,12 @@ fun BaseScreen(
                         onBackPress.invoke()
                     },
                     navigationIcon = navigationIcon,
-                    actions = actions
+                    actions = actions,
+                    contentColor = if(!showBackground) Color.Black else null
                 )
             }
         }
-        Box(modifier = baseScreenModifier, contentAlignment = Alignment.TopCenter) {
+        Box(modifier = baseScreenModifier.padding(top = if(showAppBar) 25.dp else 0.dp), contentAlignment = Alignment.TopCenter) {
             content(paddingValues)
         }
     }

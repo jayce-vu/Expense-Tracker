@@ -47,7 +47,7 @@ fun CircleAvatar(imageUrl: String, size: Dp = 80.dp) {
                 .semantics { testTag = TestTags.LIST_IMG }
                 .fillMaxSize(),
             // shows a progress indicator when loading an image.
-            contentScale = ContentScale.Fit,
+            contentScale = ContentScale.Crop,
             circularReveal = CircularReveal(duration = 100),
             shimmerParams =
             ShimmerParams(
@@ -62,7 +62,7 @@ fun CircleAvatar(imageUrl: String, size: Dp = 80.dp) {
                     Image(
                         imageVector = Icons.Filled.Person,
                         modifier = Modifier.size(size),
-                        contentDescription = null
+                        contentDescription = null,
                     )
                 }
             },

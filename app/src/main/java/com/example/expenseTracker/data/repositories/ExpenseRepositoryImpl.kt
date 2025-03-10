@@ -16,12 +16,14 @@ import javax.inject.Inject
 
 class ExpenseRepositoryImpl @Inject constructor(private val expenseService: ExpenseService) :
     ExpenseRepository {
+        private var mExpenses: List<ExpenseResponseModel> = emptyList()
     override suspend fun getAllExpenses(): NetworkResult<List<ExpenseResponseModel>> {
         val response = expenseService.getAllExpenses()
         if (response.isSuccessful) {
             val result = response.body()
             result?.let { nonNullResult ->
                 if (nonNullResult.isSuccess()) {
+                    mExpenses = nonNullResult.data
                     return (NetworkResult.Success(nonNullResult.data))
                 } else {
                     return (NetworkResult.Error(nonNullResult.message))
@@ -115,6 +117,10 @@ class ExpenseRepositoryImpl @Inject constructor(private val expenseService: Expe
             }
         }
         return (NetworkResult.Error(response.errorBody().toString()))
+    }
+
+    override fun getAllCachedExpenses(): List<ExpenseResponseModel> {
+        return mExpenses
     }
 
     private fun createPartFromString(value: String): RequestBody {

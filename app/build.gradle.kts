@@ -156,4 +156,6 @@ dependencies {
     implementation(kotlin("test"))
     // splash screen
     implementation(libs.androidx.core.splashscreen)
+
+    implementation(libs.compose)
 }

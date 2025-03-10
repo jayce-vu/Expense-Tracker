@@ -1,5 +1,6 @@
 [versions]
 agp = "8.8.1"
+compose = "1.12.0"
 coreSplashscreen = "1.0.1"
 hiltNavigationCompose = "1.2.0"
 kotlin = "2.1.10"
@@ -55,6 +56,7 @@ appcompat = "1.7.0"
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+compose = { module = "com.patrykandpatrick.vico:compose", version.ref = "compose" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 #noinspection SimilarGradleDependency
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

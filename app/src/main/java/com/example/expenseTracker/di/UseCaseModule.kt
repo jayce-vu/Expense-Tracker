@@ -3,6 +3,7 @@ package com.example.expenseTracker.di
 import com.example.expenseTracker.domain.repositories.ExpenseRepository
 import com.example.expenseTracker.domain.repositories.UserRepository
 import com.example.expenseTracker.domain.usecase.expenses.AddExpenseUseCase
+import com.example.expenseTracker.domain.usecase.expenses.AllExpensesUseCase
 import com.example.expenseTracker.domain.usecase.users.UserInfoUseCase
 import com.example.expenseTracker.domain.usecase.users.UserLoginUseCase
 import com.example.expenseTracker.domain.usecase.users.UserLogoutUseCase
@@ -37,4 +38,8 @@ object UseCaseModule {
     @Provides
     fun provideAddExpenseUseCase(expenseRepository: ExpenseRepository): AddExpenseUseCase =
         AddExpenseUseCase(expenseRepository)
+
+    @Provides
+    fun provideAllExpenseUseCase(expenseRepository: ExpenseRepository): AllExpensesUseCase =
+        AllExpensesUseCase(expenseRepository)
 }

@@ -12,6 +12,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.centerAlignedTopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import com.example.expenseTracker.utils.TestTags
@@ -24,8 +25,10 @@ fun CommonAppBar(
     onNavigationIconClick: () -> Unit = {},
     showBackButton: Boolean = true,
     title: String,
+    contentColor: Color? = null,
 ) {
     val color = MaterialTheme.colorScheme
+    val contentColorDefault = contentColor ?: color.onSecondary
     TopAppBar(
         modifier = Modifier.semantics { testTag = TestTags.CAT_SCREEN_APP_BAR },
         navigationIcon = if (showBackButton) {
@@ -48,10 +51,10 @@ fun CommonAppBar(
         actions = actions,
         colors =
         centerAlignedTopAppBarColors(
-            containerColor = color.onPrimary.copy(alpha = 0f),
-            titleContentColor = color.onSecondary,
-            navigationIconContentColor = color.onSecondary,
-            actionIconContentColor = color.onSecondary,
+            containerColor = contentColorDefault.copy(alpha = 0f),
+            titleContentColor = contentColorDefault,
+            navigationIconContentColor = contentColorDefault,
+            actionIconContentColor = contentColorDefault,
         ),
     )
 }

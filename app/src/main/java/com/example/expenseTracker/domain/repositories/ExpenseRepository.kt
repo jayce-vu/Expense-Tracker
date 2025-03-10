@@ -20,4 +20,6 @@ interface ExpenseRepository {
     ): NetworkResult<Boolean>
 
     suspend fun deleteExpense(id: String): NetworkResult<Boolean>
+
+    fun getAllCachedExpenses(): List<ExpenseResponseModel>
 }

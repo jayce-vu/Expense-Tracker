@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -31,12 +32,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.expenseTracker.data.services.responseModels.ExpenseResponseModel
 import com.example.expenseTracker.presentation.features.home.viewModel.HomeViewModel
 import com.example.expenseTracker.presentation.layouts.BaseScreen
 import com.example.expenseTracker.presentation.navigation.NavigationScreens
@@ -49,10 +52,11 @@ fun HomeScreen(navController: NavController) {
     val style = MaterialTheme.typography
     val viewModel = hiltViewModel<HomeViewModel>()
     val state by viewModel.state.collectAsState()
+    val expenses by viewModel.expenseList.collectAsState()
     BaseScreen(
         title = "Home",
         showAppBar = false,
-        disablePadding = true,
+        disablePadding = false,
         navController = navController
     ) {
         Box(
@@ -109,7 +113,7 @@ fun HomeScreen(navController: NavController) {
                         }
                     }
                 }
-                TransactionList(style) {
+                TransactionList(expenses,style) {
                     navController.navigate(NavigationScreens.TransactionHistory.screenRoute)
                 }
             }
@@ -118,14 +122,43 @@ fun HomeScreen(navController: NavController) {
 }
 
 @Composable
-private fun TransactionList(style: Typography, onSeeAll: () -> Unit) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
+fun TransactionList(
+    expenses: List<ExpenseResponseModel>,
+    style: Typography,
+    onSeeAll: () -> Unit
+) {
+    Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth()
+        ) {
             Text("Transactions", style = style.titleLarge)
             TextButton(onClick = onSeeAll) {
                 Text("See all", style = style.titleMedium)
             }
         }
+
+        LazyColumn {
+            items(expenses.size) { index ->
+                ExpenseItem(expenses[index], style)
+            }
+        }
+    }
+}
+
+@Composable
+fun ExpenseItem(expense: ExpenseResponseModel, style: Typography) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Column {
+            Text(expense.categoryName, style = style.bodyLarge)
+            Text(expense.date, style = style.bodyMedium, color = Color.Gray)
+        }
+        Text("-$${expense.amount}", style = style.bodyLarge, color = Color.Red)
     }
 }
 
@@ -133,7 +166,7 @@ private fun TransactionList(style: Typography, onSeeAll: () -> Unit) {
 @Composable
 private fun PreviewTransactionList() {
     Surface(modifier = Modifier.width(300.dp)) {
-        TransactionList(MaterialTheme.typography) {}
+        TransactionList(emptyList(),MaterialTheme.typography) {}
     }
 }
 
